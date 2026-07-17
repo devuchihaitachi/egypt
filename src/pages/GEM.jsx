@@ -39,6 +39,7 @@ export default function GEM() {
             <div className="glass-panel gem-meta-badge">
               {t('gem.openingHours')}
             </div>
+          </div>
         </div>
       </ScrollReveal>
 

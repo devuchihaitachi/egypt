@@ -1169,6 +1169,8 @@ h1, h2, h3, h4 {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .page-transition {
@@ -2347,6 +2349,7 @@ html[dir="rtl"] .faq-question-btn {
   font-size: 0.8rem;
   opacity: 0.8;
   color: var(--color-gold);
+  flex-wrap: wrap;
 }
 .card-meta-item {
   display: flex;
@@ -2383,5 +2386,11 @@ html[dir="rtl"] .faq-question-btn {
   .glyph-svg {
     width: 35px;
     height: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .unesco-card, .discovery-card {
+    padding: 1.25rem;
   }
 }

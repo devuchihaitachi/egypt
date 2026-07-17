@@ -2,6 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 
 const NavigationContext = createContext();
 
@@ -21,18 +22,21 @@ export const pages = [
 ];
 
 const pathToPage = (path) => {
-  if (path === '/') return 'home';
-  const clean = path.replace(/^\//, '');
-  return pages.includes(clean) ? clean : 'home';
+  const segments = path.split('/').filter(Boolean);
+  if (segments.length <= 1) return 'home';
+  const page = segments[1];
+  return pages.includes(page) ? page : 'home';
 };
 
-const pageToPath = (page) => {
-  return page === 'home' ? '/' : `/${page}`;
+const pageToPath = (page, currentLang) => {
+  const prefix = `/${currentLang}`;
+  return page === 'home' ? prefix : `${prefix}/${page}`;
 };
 
 export function NavigationProvider({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { language } = useLanguage();
   const [transitionDirection, setTransitionDirection] = useState('forward');
   
   const currentPage = pathToPage(location.pathname);
@@ -56,7 +60,7 @@ export function NavigationProvider({ children }) {
 
   const navigateTo = (targetPage) => {
     if (!pages.includes(targetPage)) return;
-    navigate(pageToPath(targetPage));
+    navigate(pageToPath(targetPage, language));
   };
 
   return (

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ScrollReveal from '../components/ScrollReveal';
 import { useLanguage } from '../context/LanguageContext';
+import { img } from '../utils/imagePath';
 
 export default function PlanVisit() {
   const { t } = useLanguage();
@@ -44,7 +45,7 @@ export default function PlanVisit() {
             <div
               className="map-placeholder"
               style={{
-                backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("/images/map.jpg")'
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${img('/images/map.jpg')})`
               }}
             >
               <span className="map-pin cairo">{t('visit.cairo')}</span>

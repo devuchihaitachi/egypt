@@ -1,5 +1,6 @@
 import ScrollReveal from '../components/ScrollReveal';
 import { useLanguage } from '../context/LanguageContext';
+import { img } from '../utils/imagePath';
 
 const exhibitsList = ['tutankhamun', 'staircase', 'solarBoat'];
 
@@ -19,7 +20,7 @@ export default function GEM() {
       <ScrollReveal delay={150}>
         <div className="gem-hero-container">
           <img 
-            src="/images/gem.jpg" 
+            src={img('/images/gem.jpg')} 
             alt={t('gem.title')} 
             className="gem-hero-img"
           />

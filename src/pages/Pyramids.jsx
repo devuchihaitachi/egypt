@@ -4,6 +4,7 @@ import CountUp from '../components/CountUp';
 import Modal from '../components/Modal';
 import { useLanguage } from '../context/LanguageContext';
 import ImageWithFallback from '../components/ImageWithFallback';
+import { img } from '../utils/imagePath';
 
 const gizaPyramids = [
   { id: 'khufu', height: 146, age: 4580 },
@@ -40,8 +41,8 @@ export default function Pyramids() {
           >
             <div className="card-thumb-container">
               <ImageWithFallback
-                src={`/images/items/pyramid_${pyr.id}.jpg`}
-                fallbackSrc="/images/pyramids-info.jpg"
+                src={img(`/images/items/pyramid_${pyr.id}.jpg`)}
+                fallbackSrc={img('/images/pyramids-info.jpg')}
                 alt={t(`pyramids.items.${pyr.id}.name`)}
                 className="card-thumb-img"
               />
@@ -122,8 +123,8 @@ export default function Pyramids() {
           <div className="split-modal-content">
             <div className="split-modal-image-side">
               <ImageWithFallback
-                src={`/images/items/pyramid_${selectedPyramid.id}.jpg`}
-                fallbackSrc="/images/pyramids-info.jpg"
+                src={img(`/images/items/pyramid_${selectedPyramid.id}.jpg`)}
+                fallbackSrc={img('/images/pyramids-info.jpg')}
                 alt={t(`pyramids.items.${selectedPyramid.id}.name`)}
                 className="split-modal-image"
               />

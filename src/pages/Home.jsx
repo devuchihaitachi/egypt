@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigation } from '../components/Router';
 import { useLanguage } from '../context/LanguageContext';
 import ScrollReveal from '../components/ScrollReveal';
+import { img } from '../utils/imagePath';
 
 export default function Home() {
   const { navigateTo } = useNavigation();
@@ -31,7 +32,7 @@ export default function Home() {
         <div
           ref={bgRef}
           className="home-hero-bg"
-          style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.85)), url("/images/giza-hero.jpg")' }}
+          style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.85)), url(${img('/images/giza-hero.jpg')})` }}
         />
         <div className="home-content">
           <ScrollReveal>
@@ -93,7 +94,7 @@ export default function Home() {
             >
               <div
                 className="home-intro-card-bg"
-                style={{ backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.9) 90%), url("/images/djoser.png")' }}
+                style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.9) 90%), url(${img('/images/djoser.png')})` }}
               />
               <span className="card-number">01</span>
               <div className="card-immersive-content">
@@ -116,7 +117,7 @@ export default function Home() {
             >
               <div
                 className="home-intro-card-bg"
-                style={{ backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.9) 90%), url("/images/temples.jpg")' }}
+                style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.9) 90%), url(${img('/images/temples.jpg')})` }}
               />
               <span className="card-number">02</span>
               <div className="card-immersive-content">
@@ -139,7 +140,7 @@ export default function Home() {
             >
               <div
                 className="home-intro-card-bg"
-                style={{ backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.9) 90%), url("/images/narmer.png")' }}
+                style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.9) 90%), url(${img('/images/narmer.png')})` }}
               />
               <span className="card-number">03</span>
               <div className="card-immersive-content">
@@ -162,7 +163,7 @@ export default function Home() {
             >
               <div
                 className="home-intro-card-bg"
-                style={{ backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.9) 90%), url("/images/gods.jpg")' }}
+                style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.9) 90%), url(${img('/images/gods.jpg')})` }}
               />
               <span className="card-number">04</span>
               <div className="card-immersive-content">

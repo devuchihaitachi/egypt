@@ -3,6 +3,7 @@ import ScrollReveal from '../components/ScrollReveal';
 import Modal from '../components/Modal';
 import { useLanguage } from '../context/LanguageContext';
 import ImageWithFallback from '../components/ImageWithFallback';
+import { img } from '../utils/imagePath';
 
 const categories = ['pharaonic', 'obelisks', 'grecoRoman', 'coptic', 'islamic', 'modern', 'natural'];
 
@@ -66,8 +67,8 @@ export default function Monuments() {
             >
               <div className="strip-thumb-container">
                 <ImageWithFallback
-                  src={`/images/items/${id}.jpg`}
-                  fallbackSrc="/images/temples.jpg"
+                  src={img(`/images/items/${id}.jpg`)}
+                  fallbackSrc={img('/images/temples.jpg')}
                   alt={t(`monuments.items.${id}.name`)}
                   className="strip-thumb-img"
                 />
@@ -95,8 +96,8 @@ export default function Monuments() {
           <div className="split-modal-content">
             <div className="split-modal-image-side">
               <ImageWithFallback
-                src={`/images/items/${selectedMonumentId}.jpg`}
-                fallbackSrc="/images/temples.jpg"
+                src={img(`/images/items/${selectedMonumentId}.jpg`)}
+                fallbackSrc={img('/images/temples.jpg')}
                 alt={t(`monuments.items.${selectedMonumentId}.name`)}
                 className="split-modal-image"
               />

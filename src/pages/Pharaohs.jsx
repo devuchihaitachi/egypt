@@ -4,6 +4,7 @@ import Modal from '../components/Modal';
 import { useLanguage } from '../context/LanguageContext';
 import { Crown, Sparkles } from 'lucide-react';
 import ImageWithFallback from '../components/ImageWithFallback';
+import { img } from '../utils/imagePath';
 
 const rulersList = [
   'narmer', 'djoser', 'sneferu', 'khufu', 'khafre', 'pepi2', 'mentuhotep2', 
@@ -34,13 +35,13 @@ export default function Pharaohs() {
           name: t(`pharaohs.rulers.${selectedItem.id}.name`),
           subtitle: t(`pharaohs.rulers.${selectedItem.id}.reign`),
           details: t(`pharaohs.rulers.${selectedItem.id}.achievements`),
-          fallback: '/images/pharaohs.jpg'
+          fallback: img('/images/pharaohs.jpg')
         }
       : {
           name: t(`pharaohs.deities.${selectedItem.id}.name`),
           subtitle: t(`pharaohs.deities.${selectedItem.id}.title`),
           details: t(`pharaohs.deities.${selectedItem.id}.myth`),
-          fallback: '/images/gods.jpg'
+          fallback: img('/images/gods.jpg')
         })
     : null;
 
@@ -94,8 +95,8 @@ export default function Pharaohs() {
                   <div className="god-card-content">
                     <div className="god-card-thumb-wrapper">
                       <ImageWithFallback
-                        src={`/images/items/${id}.jpg`}
-                        fallbackSrc="/images/pharaohs.jpg"
+                        src={img(`/images/items/${id}.jpg`)}
+                        fallbackSrc={img('/images/pharaohs.jpg')}
                         alt={t(`pharaohs.rulers.${id}.name`)}
                         className="god-card-thumb"
                       />
@@ -137,8 +138,8 @@ export default function Pharaohs() {
                   <div className="god-card-content">
                     <div className="god-card-thumb-wrapper">
                       <ImageWithFallback
-                        src={`/images/items/${id}.jpg`}
-                        fallbackSrc="/images/gods.jpg"
+                        src={img(`/images/items/${id}.jpg`)}
+                        fallbackSrc={img('/images/gods.jpg')}
                         alt={t(`pharaohs.deities.${id}.name`)}
                         className="god-card-thumb"
                       />
@@ -168,7 +169,7 @@ export default function Pharaohs() {
           <div className="split-modal-content">
             <div className="split-modal-image-side">
               <ImageWithFallback
-                src={`/images/items/${selectedItem.id}.jpg`}
+                src={img(`/images/items/${selectedItem.id}.jpg`)}
                 fallbackSrc={selectedData.fallback}
                 alt={selectedData.name}
                 className="split-modal-image"

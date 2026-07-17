@@ -27,18 +27,18 @@ function AppContent() {
         className={`page-transition page-transition-${transitionDirection}`}
       >
         <Routes location={location}>
-          <Route path="/" element={<Home />} />
-          <Route path="/pyramids" element={<Pyramids />} />
-          <Route path="/monuments" element={<Monuments />} />
-          <Route path="/pharaohs" element={<Pharaohs />} />
-          <Route path="/gods" element={<Gods />} />
-          <Route path="/culture" element={<Culture />} />
-          <Route path="/gem" element={<GEM />} />
-          <Route path="/unesco" element={<UNESCO />} />
-          <Route path="/discoveries" element={<Discoveries />} />
-          <Route path="/timeline" element={<Timeline />} />
-          <Route path="/hieroglyphics" element={<Hieroglyphics />} />
-          <Route path="/visit" element={<PlanVisit />} />
+          <Route path="/:lang" element={<Home />} />
+          <Route path="/:lang/pyramids" element={<Pyramids />} />
+          <Route path="/:lang/monuments" element={<Monuments />} />
+          <Route path="/:lang/pharaohs" element={<Pharaohs />} />
+          <Route path="/:lang/gods" element={<Gods />} />
+          <Route path="/:lang/culture" element={<Culture />} />
+          <Route path="/:lang/gem" element={<GEM />} />
+          <Route path="/:lang/unesco" element={<UNESCO />} />
+          <Route path="/:lang/discoveries" element={<Discoveries />} />
+          <Route path="/:lang/timeline" element={<Timeline />} />
+          <Route path="/:lang/hieroglyphics" element={<Hieroglyphics />} />
+          <Route path="/:lang/visit" element={<PlanVisit />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </main>
@@ -48,12 +48,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <LanguageProvider>
         <NavigationProvider>
           <AppContent />
         </NavigationProvider>
-      </BrowserRouter>
-    </LanguageProvider>
+      </LanguageProvider>
+    </BrowserRouter>
   );
 }

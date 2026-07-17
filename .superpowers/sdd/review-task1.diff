@@ -1,0 +1,393 @@
+# Review package (manual diff)
+
+## Files changed
+ - package.json
+ - vite.config.js
+ - vitest.config.js
+ - index.html
+ - src/main.jsx
+ - src/App.jsx
+ - src/index.css
+ - src/test/setup.js
+ - src/App.test.jsx
+ - eslint.config.js
+
+## Diff
+### package.json
+```diff
+--- a/package.json
++++ b/package.json
+@@ -0,0 +1,36 @@
++{
+
++  "name": "friendly-noether",
+
++  "private": true,
+
++  "version": "0.0.0",
+
++  "type": "module",
+
++  "engines": {
+
++    "node": ">=24.18.0"
+
++  },
+
++  "scripts": {
+
++    "dev": "vite",
+
++    "build": "vite build",
+
++    "lint": "eslint .",
+
++    "preview": "vite preview",
+
++    "test": "vitest run"
+
++  },
+
++  "dependencies": {
+
++    "react": "^18.3.1",
+
++    "react-dom": "^18.3.1",
+
++    "lucide-react": "^0.400.0"
+
++  },
+
++  "devDependencies": {
+
++    "@types/react": "^18.3.3",
+
++    "@types/react-dom": "^18.3.0",
+
++    "@vitejs/plugin-react": "^4.3.1",
+
++    "eslint": "^9.9.0",
+
++    "eslint-plugin-react": "^7.35.0",
+
++    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+
++    "eslint-plugin-react-refresh": "^0.4.9",
+
++    "globals": "^15.9.0",
+
++    "vite": "^5.4.1",
+
++    "vitest": "^2.0.5",
+
++    "@testing-library/react": "^16.0.0",
+
++    "@testing-library/jest-dom": "^6.4.8",
+
++    "jsdom": "^24.1.1"
+
++  }
+
++}
+
+```
+
+### vite.config.js
+```diff
+--- a/vite.config.js
++++ b/vite.config.js
+@@ -0,0 +1,9 @@
++import { defineConfig } from 'vite';
+
++import react from '@vitejs/plugin-react';
+
++
+
++export default defineConfig({
+
++  plugins: [react()],
+
++  server: {
+
++    port: 3000
+
++  }
+
++});
+
+```
+
+### vitest.config.js
+```diff
+--- a/vitest.config.js
++++ b/vitest.config.js
+@@ -0,0 +1,11 @@
++import { defineConfig } from 'vitest/config';
+
++import react from '@vitejs/plugin-react';
+
++
+
++export default defineConfig({
+
++  plugins: [react()],
+
++  test: {
+
++    globals: true,
+
++    environment: 'jsdom',
+
++    setupFiles: './src/test/setup.js'
+
++  }
+
++});
+
+```
+
+### index.html
+```diff
+--- a/index.html
++++ b/index.html
+@@ -0,0 +1,13 @@
++<!doctype html>
+
++<html lang="en">
+
++  <head>
+
++    <meta charset="UTF-8" />
+
++    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+
++    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
++    <title>Eternal Egypt</title>
+
++  </head>
+
++  <body>
+
++    <div id="root"></div>
+
++    <script type="module" src="/src/main.jsx"></script>
+
++  </body>
+
++</html>
+
+```
+
+### src/main.jsx
+```diff
+--- a/src/main.jsx
++++ b/src/main.jsx
+@@ -0,0 +1,11 @@
++import React from 'react';
+
++import ReactDOM from 'react-dom/client';
+
++import App from './App.jsx';
+
++import './index.css';
+
++
+
++ReactDOM.createRoot(document.getElementById('root')).render(
+
++  <React.StrictMode>
+
++    <App />
+
++  </React.StrictMode>,
+
++);
+
++
+
+```
+
+### src/App.jsx
+```diff
+--- a/src/App.jsx
++++ b/src/App.jsx
+@@ -0,0 +1,9 @@
++function App() {
+
++  return (
+
++    <div className="app">
+
++      <h1>Eternal Egypt</h1>
+
++    </div>
+
++  );
+
++}
+
++
+
++export default App;
+
+```
+
+### src/index.css
+```diff
+--- a/src/index.css
++++ b/src/index.css
+@@ -0,0 +1,5 @@
++/* index.css */
+
++body {
+
++  margin: 0;
+
++  font-family: sans-serif;
+
++}
+
+```
+
+### src/test/setup.js
+```diff
+--- a/src/test/setup.js
++++ b/src/test/setup.js
+@@ -0,0 +1 @@
++import '@testing-library/jest-dom';
+
+```
+
+### src/App.test.jsx
+```diff
+--- a/src/App.test.jsx
++++ b/src/App.test.jsx
+@@ -0,0 +1,10 @@
++import { render, screen } from '@testing-library/react';
+
++import { describe, it, expect } from 'vitest';
+
++import App from './App';
+
++
+
++describe('App', () => {
+
++  it('renders Eternal Egypt heading', () => {
+
++    render(<App />);
+
++    expect(screen.getByText('Eternal Egypt')).toBeInTheDocument();
+
++  });
+
++});
+
+```
+
+### eslint.config.js
+```diff
+--- a/eslint.config.js
++++ b/eslint.config.js
+@@ -0,0 +1,49 @@
++import js from '@eslint/js';
+
++import globals from 'globals';
+
++import react from 'eslint-plugin-react';
+
++import reactHooks from 'eslint-plugin-react-hooks';
+
++import reactRefresh from 'eslint-plugin-react-refresh';
+
++
+
++export default [
+
++  {
+
++    ignores: ['dist', 'node_modules'],
+
++  },
+
++  {
+
++    files: ['**/*.{js,jsx}'],
+
++    languageOptions: {
+
++      ecmaVersion: 2022,
+
++      sourceType: 'module',
+
++      globals: {
+
++        ...globals.browser,
+
++        ...globals.node,
+
++        ...globals.es2021,
+
++      },
+
++      parserOptions: {
+
++        ecmaFeatures: {
+
++          jsx: true,
+
++        },
+
++      },
+
++    },
+
++    plugins: {
+
++      react,
+
++      'react-hooks': reactHooks,
+
++      'react-refresh': reactRefresh,
+
++    },
+
++    rules: {
+
++      ...js.configs.recommended.rules,
+
++      ...react.configs.recommended.rules,
+
++      ...react.configs['jsx-runtime'].rules,
+
++      ...reactHooks.configs.recommended.rules,
+
++      'react/jsx-no-target-blank': 'off',
+
++      'react-refresh/only-export-components': [
+
++        'warn',
+
++        { allowConstantExport: true },
+
++      ],
+
++    },
+
++    settings: {
+
++      react: {
+
++        version: 'detect',
+
++      },
+
++    },
+
++  },
+
++];
+
+```
+

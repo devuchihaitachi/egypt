@@ -1,0 +1,893 @@
+### Task 7: Create All Pages (Home, Pyramids, Monuments, Pharaohs, Gods, Gallery, PlanVisit, About)
+
+**Files:**
+- Create: `src/pages/Home.jsx`
+- Create: `src/pages/Pyramids.jsx`
+- Create: `src/pages/Monuments.jsx`
+- Create: `src/pages/Pharaohs.jsx`
+- Create: `src/pages/Gods.jsx`
+- Create: `src/pages/Gallery.jsx`
+- Create: `src/pages/PlanVisit.jsx`
+- Create: `src/pages/About.jsx`
+- Modify: `src/index.css` (append page-specific styles)
+
+**Interfaces:**
+- Each file exports a default React functional component that renders content in a `<div className="page-view ...">` wrapper.
+- They consume: `ScrollReveal`, `CountUp`, `Modal` from `../components/`.
+- `Gods.jsx` consumes `Modal` from `../components/Modal`.
+- `Gallery.jsx` uses a local Lightbox (inline, no external library).
+
+---
+
+### Home.jsx
+
+Create `src/pages/Home.jsx`:
+```jsx
+import { useNavigation } from '../components/Router';
+import ScrollReveal from '../components/ScrollReveal';
+
+export default function Home() {
+  const { navigateTo } = useNavigation();
+
+  return (
+    <div className="home-hero" style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.85)), url("/images/giza-hero.jpg")' }}>
+      <div className="home-content">
+        <ScrollReveal>
+          <h1 className="home-title">Eternal Egypt</h1>
+          <p className="home-subtitle">Journey through 5,000 years of majestic history, liquid-glass visual architecture, and timeless treasures.</p>
+        </ScrollReveal>
+        <ScrollReveal delay={200}>
+          <button className="cta-button" onClick={() => navigateTo('pyramids')}>
+            EXPLORE MONUMENTS
+          </button>
+        </ScrollReveal>
+        <div className="scroll-cue">
+          <span className="arrow-down">&#8595;</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+Add Home CSS to `src/index.css`:
+```css
+.home-hero {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  margin-top: -70px;
+}
+.home-content {
+  max-width: 800px;
+  padding: 2rem;
+}
+.home-title {
+  font-size: 4rem;
+  color: var(--color-gold);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  margin-bottom: 1.5rem;
+}
+.home-subtitle {
+  font-size: 1.25rem;
+  color: var(--color-papyrus);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+.cta-button {
+  background: rgba(212, 175, 55, 0.2);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold);
+  padding: 1rem 2.5rem;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+  transition: all 0.3s;
+}
+.cta-button:hover {
+  background: var(--color-gold);
+  color: #0b0b0f;
+  box-shadow: 0 4px 25px rgba(212, 175, 55, 0.5);
+}
+.scroll-cue {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s infinite;
+}
+.arrow-down {
+  font-size: 2rem;
+  color: var(--color-gold);
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+  40% { transform: translateY(-10px) translateX(-50%); }
+  60% { transform: translateY(-5px) translateX(-50%); }
+}
+@media (max-width: 768px) {
+  .home-title { font-size: 2.5rem; }
+  .home-subtitle { font-size: 1rem; }
+}
+```
+
+---
+
+### Pyramids.jsx
+
+Create `src/pages/Pyramids.jsx`:
+```jsx
+import ScrollReveal from '../components/ScrollReveal';
+import CountUp from '../components/CountUp';
+
+const pyramidsData = [
+  { name: 'Great Pyramid of Giza', height: 146, age: 4580, builder: 'Khufu', desc: 'The oldest and largest of the Giza pyramids. It remained the tallest man-made structure for over 3,800 years.' },
+  { name: 'Step Pyramid of Saqqara', height: 62, age: 4700, builder: 'Djoser', desc: 'Considered the world\'s oldest monumental cut stone structure, designed by the legendary architect Imhotep.' },
+  { name: 'Bent Pyramid of Dahshur', height: 104, age: 4620, builder: 'Sneferu', desc: 'Famous for its unique double-angle slope, reflecting a crucial transition phase in pyramid engineering.' },
+  { name: 'Red Pyramid of Dahshur', height: 105, age: 4590, builder: 'Sneferu', desc: 'The world\'s first successful smooth-sided true pyramid, named for the rusty reddish hue of its limestone.' }
+];
+
+export default function Pyramids() {
+  return (
+    <div className="page-view page-container">
+      <ScrollReveal>
+        <div className="section-header">
+          <h1>The Pyramids</h1>
+          <p>Monuments of eternity, engineered by master builders to stand forever.</p>
+        </div>
+      </ScrollReveal>
+      <div className="pyramids-grid">
+        {pyramidsData.map((pyr, index) => (
+          <ScrollReveal key={pyr.name} delay={index * 150}>
+            <div className="glass-panel glass-panel-interactive pyramid-card">
+              <h2>{pyr.name}</h2>
+              <div className="stats-box">
+                <div className="stat-item">
+                  <span className="stat-num"><CountUp end={pyr.height} suffix="m" /></span>
+                  <span className="stat-label">Height</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-num"><CountUp end={pyr.age} suffix=" yrs" /></span>
+                  <span className="stat-label">Age</span>
+                </div>
+              </div>
+              <p className="builder-text"><strong>Builder:</strong> {pyr.builder}</p>
+              <p className="desc-text">{pyr.desc}</p>
+            </div>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+Add Pyramids CSS to `src/index.css`:
+```css
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 2rem 5rem 2rem;
+}
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+.section-header h1 {
+  font-size: 3rem;
+  color: var(--color-gold);
+  margin-bottom: 1rem;
+}
+.pyramids-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+.pyramid-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.pyramid-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-sandstone);
+}
+.stats-box {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 1rem;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+.stat-num {
+  font-size: 1.8rem;
+  font-family: var(--font-heading);
+  color: var(--color-gold);
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--color-papyrus);
+  opacity: 0.7;
+  margin-top: 0.2rem;
+}
+.builder-text {
+  margin-bottom: 0.5rem;
+  color: var(--color-gold);
+}
+.desc-text {
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+```
+
+---
+
+### Monuments.jsx
+
+Create `src/pages/Monuments.jsx`:
+```jsx
+import ScrollReveal from '../components/ScrollReveal';
+
+const monumentsData = [
+  { name: 'Karnak Temple', location: 'Luxor', age: '3,500 years old', desc: 'The largest temple complex ever built, spanning over 100 hectares, dedicated to Amun-Ra and other deities.' },
+  { name: 'Luxor Temple', location: 'Luxor', age: '3,400 years old', desc: 'A vast sanctuary built on the banks of the Nile, famous for its grand avenue of sphinxes.' },
+  { name: 'Abu Simbel', location: 'Aswan', age: '3,200 years old', desc: 'Two massive rock temples carved out of the mountainside during the reign of Ramses II, depicting four colossal statues.' },
+  { name: 'Great Sphinx of Giza', location: 'Giza', age: '4,500 years old', desc: 'A monumental statue of a mythical creature with a lion\'s body and a pharaoh\'s head, carved from a single piece of limestone.' }
+];
+
+export default function Monuments() {
+  return (
+    <div className="page-view page-container">
+      <ScrollReveal>
+        <div className="section-header">
+          <h1>Temples &amp; Monuments</h1>
+          <p>Vast halls of stone, carved with hieroglyphs honoring kings and deities.</p>
+        </div>
+      </ScrollReveal>
+      <div className="monuments-layout">
+        {monumentsData.map((mon, index) => (
+          <ScrollReveal key={mon.name} delay={index * 150}>
+            <div className="glass-panel glass-panel-interactive monument-strip">
+              <h2>{mon.name}</h2>
+              <p className="strip-meta"><strong>Location:</strong> {mon.location} &bull; <strong>Age:</strong> {mon.age}</p>
+              <p className="strip-desc">{mon.desc}</p>
+            </div>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+Add Monuments CSS:
+```css
+.monuments-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.monument-strip {
+  padding: 2.5rem;
+}
+.monument-strip h2 {
+  font-size: 1.8rem;
+  color: var(--color-sandstone);
+  margin-bottom: 0.5rem;
+}
+.strip-meta {
+  font-size: 0.9rem;
+  color: var(--color-gold);
+  margin-bottom: 1rem;
+}
+.strip-desc {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+```
+
+---
+
+### Pharaohs.jsx
+
+Create `src/pages/Pharaohs.jsx`:
+```jsx
+import ScrollReveal from '../components/ScrollReveal';
+
+const kingdoms = [
+  {
+    era: 'Old Kingdom (c. 2686 – 2181 BC)',
+    pharaohs: [
+      { name: 'Khufu', reign: 'c. 2589 – 2566 BC', achievement: 'Commissioned the Great Pyramid of Giza.' }
+    ]
+  },
+  {
+    era: 'Middle Kingdom (c. 2055 – 1650 BC)',
+    pharaohs: [
+      { name: 'Mentuhotep II', reign: 'c. 2061 – 2010 BC', achievement: 'Reunited Egypt, launching the Middle Kingdom.' }
+    ]
+  },
+  {
+    era: 'New Kingdom (c. 1550 – 1077 BC)',
+    pharaohs: [
+      { name: 'Hatshepsut', reign: 'c. 1478 – 1458 BC', achievement: 'One of Egypt\'s most successful female pharaohs, expanding trade routes and building Djeser-Djeseru.' },
+      { name: 'Ramses II', reign: 'c. 1279 – 1213 BC', achievement: 'Known as Ramses the Great, built Abu Simbel and reigned for an incredible 66 years.' },
+      { name: 'Tutankhamun', reign: 'c. 1332 – 1323 BC', achievement: 'The boy king whose intact tomb discovered in 1922 provided the world with unmatched archaeological treasure.' }
+    ]
+  }
+];
+
+export default function Pharaohs() {
+  return (
+    <div className="page-view page-container">
+      <ScrollReveal>
+        <div className="section-header">
+          <h1>Pharaohs &amp; Dynasties</h1>
+          <p>The god-kings who ruled over the Black Land along the Nile.</p>
+        </div>
+      </ScrollReveal>
+      <div className="timeline-container">
+        {kingdoms.map((k, kIndex) => (
+          <div key={k.era} className="timeline-era">
+            <ScrollReveal delay={kIndex * 200}>
+              <h2 className="era-title">{k.era}</h2>
+            </ScrollReveal>
+            <div className="era-cards">
+              {k.pharaohs.map((ph, pIndex) => (
+                <ScrollReveal key={ph.name} delay={pIndex * 150}>
+                  <div className="glass-panel pharaoh-card">
+                    <h3>{ph.name}</h3>
+                    <p className="reign-text">Reign: {ph.reign}</p>
+                    <p className="achievement-text"><strong>Key Achievement:</strong> {ph.achievement}</p>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+Add Pharaohs CSS:
+```css
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+.timeline-era {
+  border-left: 2px solid var(--color-gold);
+  padding-left: 2rem;
+  margin-left: 1rem;
+}
+.era-title {
+  font-size: 1.8rem;
+  color: var(--color-gold);
+  margin-bottom: 2rem;
+}
+.era-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.pharaoh-card {
+  padding: 1.5rem 2rem;
+}
+.pharaoh-card h3 {
+  font-size: 1.4rem;
+  color: var(--color-sandstone);
+  margin-bottom: 0.5rem;
+}
+.reign-text {
+  font-size: 0.9rem;
+  color: var(--color-papyrus);
+  opacity: 0.8;
+  margin-bottom: 0.5rem;
+}
+.achievement-text {
+  line-height: 1.5;
+}
+```
+
+---
+
+### Gods.jsx
+
+Create `src/pages/Gods.jsx`:
+```jsx
+import { useState } from 'react';
+import ScrollReveal from '../components/ScrollReveal';
+import Modal from '../components/Modal';
+
+const godsData = [
+  { name: 'Ra', title: 'Sun God', myth: 'The king of deities and father of creation. He sailed across the sky in his solar barque by day, and fought the chaos serpent Apophis in the underworld by night.' },
+  { name: 'Osiris', title: 'Lord of the Underworld', myth: 'The god of resurrection and agriculture. He was murdered by his brother Seth, but restored to life by his wife Isis to rule over the Land of the Dead.' },
+  { name: 'Isis', title: 'Goddess of Magic', myth: 'The divine mother and master of magic. She resurrected Osiris and protected their young son Horus until he could claim the throne of Egypt.' },
+  { name: 'Anubis', title: 'Guardian of Mummification', myth: 'The jackal-headed god who guided souls to the Hall of Ma\'at, weighing their hearts against the feather of truth.' },
+  { name: 'Horus', title: 'The Sky God', myth: 'The falcon-headed god of kingship. He battled Seth to avenge his father Osiris, losing his eye which became a symbol of protection.' },
+  { name: 'Thoth', title: 'God of Wisdom', myth: 'The ibis-headed patron of scribes, writing, science, and magic, responsible for keeping the celestial records.' }
+];
+
+export default function Gods() {
+  const [selectedGod, setSelectedGod] = useState(null);
+
+  return (
+    <div className="page-view page-container">
+      <ScrollReveal>
+        <div className="section-header">
+          <h1>Gods &amp; Mythology</h1>
+          <p>Meet the pantheon of divine beings who held balance over the cosmos.</p>
+        </div>
+      </ScrollReveal>
+      <div className="gods-grid">
+        {godsData.map((god, index) => (
+          <ScrollReveal key={god.name} delay={index * 120}>
+            <div
+              className="glass-panel glass-panel-interactive god-card"
+              onClick={() => setSelectedGod(god)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedGod(god); }}
+            >
+              <h2>{god.name}</h2>
+              <h4>{god.title}</h4>
+              <button className="read-myth-btn">READ MYTH</button>
+            </div>
+          </ScrollReveal>
+        ))}
+      </div>
+      <Modal
+        isOpen={selectedGod !== null}
+        onClose={() => setSelectedGod(null)}
+        title={selectedGod?.name}
+      >
+        <p style={{ color: 'var(--color-gold)', fontStyle: 'italic', marginBottom: '1rem' }}>
+          {selectedGod?.title}
+        </p>
+        <p>{selectedGod?.myth}</p>
+      </Modal>
+    </div>
+  );
+}
+```
+
+Add Gods CSS:
+```css
+.gods-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+.god-card {
+  padding: 2.5rem;
+  text-align: center;
+  cursor: pointer;
+}
+.god-card h2 {
+  font-size: 2rem;
+  color: var(--color-gold);
+  margin-bottom: 0.5rem;
+}
+.god-card h4 {
+  font-size: 1rem;
+  color: var(--color-papyrus);
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+.read-myth-btn {
+  background: none;
+  border: 1px solid var(--glass-border);
+  color: var(--color-gold);
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+.read-myth-btn:hover {
+  background: var(--color-gold);
+  color: #0b0b0f;
+}
+```
+
+---
+
+### Gallery.jsx
+
+Create `src/pages/Gallery.jsx` with a local inline lightbox (no external library):
+```jsx
+import { useState } from 'react';
+import { X } from 'lucide-react';
+import ScrollReveal from '../components/ScrollReveal';
+
+const galleryImages = [
+  { title: 'The Great Sphinx', path: '/images/giza-hero.jpg', caption: 'The mysterious Sphinx guarding the pyramids at Giza.' },
+  { title: 'Karnak Pillar Hall', path: '/images/temples.jpg', caption: 'Gigantic columns etched with ancient stories.' },
+  { title: 'Golden Mask', path: '/images/pharaohs.jpg', caption: 'The stunning burial mask of Tutankhamun.' },
+  { title: 'Step Pyramid', path: '/images/pyramids-info.jpg', caption: 'Djoser\'s monumental step tomb at Saqqara.' },
+  { title: 'Guardian God', path: '/images/gods.jpg', caption: 'Mystic Obsidian statue of Anubis.' },
+  { title: 'Papyrus Text', path: '/images/hieroglyphs-bg.jpg', caption: 'Detailed close up of papyrus paper with hieroglyphs.' }
+];
+
+export default function Gallery() {
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  return (
+    <div className="page-view page-container">
+      <ScrollReveal>
+        <div className="section-header">
+          <h1>Gallery</h1>
+          <p>Artifacts and monuments displaying the pinnacle of ancient Egyptian craftsmanship.</p>
+        </div>
+      </ScrollReveal>
+      <div className="gallery-grid">
+        {galleryImages.map((img, index) => (
+          <ScrollReveal key={img.title} delay={index * 100}>
+            <div
+              className="glass-panel glass-panel-interactive gallery-item"
+              onClick={() => setLightboxIndex(index)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setLightboxIndex(index); }}
+            >
+              <img src={img.path} alt={img.title} className="gallery-img" />
+              <div className="gallery-overlay">
+                <h3>{img.title}</h3>
+              </div>
+            </div>
+          </ScrollReveal>
+        ))}
+      </div>
+
+      {lightboxIndex !== null && (
+        <div className="lightbox-overlay" onClick={() => setLightboxIndex(null)}>
+          <button className="lightbox-close" onClick={() => setLightboxIndex(null)} aria-label="Close lightbox">
+            <X size={32} />
+          </button>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={galleryImages[lightboxIndex].path}
+              alt={galleryImages[lightboxIndex].title}
+              className="lightbox-img"
+            />
+            <div className="lightbox-caption glass-panel">
+              <h3>{galleryImages[lightboxIndex].title}</h3>
+              <p>{galleryImages[lightboxIndex].caption}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+Add Gallery CSS:
+```css
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.gallery-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  height: 250px;
+  padding: 0;
+}
+.gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.gallery-item:hover .gallery-img {
+  transform: scale(1.08);
+}
+.gallery-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.5rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+}
+.gallery-overlay h3 {
+  font-size: 1.25rem;
+  color: var(--color-gold);
+}
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.9);
+  z-index: 3000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.lightbox-close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+.lightbox-content {
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.lightbox-img {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(212,175,55,0.2);
+}
+.lightbox-caption {
+  padding: 1.5rem 2rem;
+  text-align: center;
+  max-width: 500px;
+}
+.lightbox-caption h3 {
+  color: var(--color-gold);
+  margin-bottom: 0.5rem;
+}
+```
+
+---
+
+### PlanVisit.jsx
+
+Create `src/pages/PlanVisit.jsx`:
+```jsx
+import ScrollReveal from '../components/ScrollReveal';
+
+export default function PlanVisit() {
+  return (
+    <div className="page-view page-container">
+      <ScrollReveal>
+        <div className="section-header">
+          <h1>Plan Your Visit</h1>
+          <p>Practical travel advice to embark on your own journey to the Land of the Pharaohs.</p>
+        </div>
+      </ScrollReveal>
+      <div className="visit-grid">
+        <ScrollReveal delay={100}>
+          <div className="glass-panel visit-info-card">
+            <h2>Practical Tips</h2>
+            <ul>
+              <li><strong>Best Time to Go:</strong> October to April, when temperatures are cooler and pleasant for outdoor exploration.</li>
+              <li><strong>Entry Tickets:</strong> Buy online in advance. Ensure you have Egyptian Pounds for smaller sites.</li>
+              <li><strong>Dress Code:</strong> Modest clothing is recommended when visiting religious and archaeological sites.</li>
+              <li><strong>Local Transport:</strong> Uber is widely available in Cairo. For Luxor and Aswan, pre-booked tours are recommended.</li>
+            </ul>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={200}>
+          <div className="glass-panel visit-map-card">
+            <h2>Key Destinations</h2>
+            <div className="map-placeholder" style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("/images/map.jpg")' }}>
+              <span className="map-pin cairo">Cairo &bull; Giza</span>
+              <span className="map-pin luxor">Luxor</span>
+              <span className="map-pin aswan">Aswan</span>
+            </div>
+          </div>
+        </ScrollReveal>
+      </div>
+    </div>
+  );
+}
+```
+
+Add PlanVisit CSS:
+```css
+.visit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+.visit-info-card {
+  padding: 2.5rem;
+}
+.visit-info-card h2 {
+  color: var(--color-gold);
+  margin-bottom: 1.5rem;
+}
+.visit-info-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.visit-info-card li {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.visit-info-card li strong {
+  color: var(--color-sandstone);
+}
+.visit-map-card {
+  padding: 2.5rem;
+}
+.visit-map-card h2 {
+  color: var(--color-gold);
+  margin-bottom: 1.5rem;
+}
+.map-placeholder {
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  position: relative;
+  border: 1px solid var(--glass-border);
+}
+.map-pin {
+  position: absolute;
+  background: rgba(11,11,15,0.85);
+  color: var(--color-gold);
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-gold);
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.map-pin.cairo { top: 20%; left: 35%; }
+.map-pin.luxor { top: 60%; left: 45%; }
+.map-pin.aswan { top: 80%; left: 48%; }
+```
+
+---
+
+### About.jsx
+
+Create `src/pages/About.jsx`:
+```jsx
+import { useState } from 'react';
+import ScrollReveal from '../components/ScrollReveal';
+
+export default function About() {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  return (
+    <div className="page-view page-container">
+      <ScrollReveal>
+        <div className="section-header">
+          <h1>About &amp; Contact</h1>
+          <p>Credits, research bibliography, and a way to reach us.</p>
+        </div>
+      </ScrollReveal>
+      <div className="about-grid">
+        <ScrollReveal delay={100}>
+          <div className="glass-panel about-info">
+            <h2>Credits &amp; Bibliography</h2>
+            <p>Eternal Egypt is an educational resource built to showcase the architecture and myths of ancient Egyptian history.</p>
+            <h3>Sources</h3>
+            <ul className="sources-list">
+              <li>British Museum Department of Egypt and Sudan</li>
+              <li>Ministry of Tourism and Antiquities, Egypt</li>
+              <li>The Theban Mapping Project</li>
+            </ul>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={200}>
+          <div className="glass-panel contact-form-card">
+            <h2>Send a Message</h2>
+            {submitted ? (
+              <div className="success-msg">
+                <p>Thank you! Your message has traveled down the Nile to us.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="contact-form">
+                <input type="text" placeholder="Your Name" required className="form-input" />
+                <input type="email" placeholder="Your Email" required className="form-input" />
+                <textarea placeholder="Your Message" required rows={4} className="form-input" />
+                <button type="submit" className="cta-button" style={{ alignSelf: 'flex-start' }}>SEND MESSAGE</button>
+              </form>
+            )}
+          </div>
+        </ScrollReveal>
+      </div>
+    </div>
+  );
+}
+```
+
+Add About CSS:
+```css
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+.about-info {
+  padding: 2.5rem;
+}
+.about-info h2 {
+  color: var(--color-gold);
+  margin-bottom: 1.5rem;
+}
+.about-info h3 {
+  color: var(--color-sandstone);
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.1rem;
+}
+.about-info p {
+  line-height: 1.6;
+}
+.sources-list {
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.contact-form-card {
+  padding: 2.5rem;
+}
+.contact-form-card h2 {
+  color: var(--color-gold);
+  margin-bottom: 1.5rem;
+}
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.form-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--color-papyrus);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  resize: vertical;
+}
+.form-input:focus {
+  border-color: var(--color-gold);
+}
+.success-msg {
+  color: var(--color-gold);
+  font-weight: bold;
+  padding: 1rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  background: rgba(212, 175, 55, 0.05);
+}
+```

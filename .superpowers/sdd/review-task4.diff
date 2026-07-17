@@ -1,0 +1,1160 @@
+# Review package (manual diff)
+
+## Files changed
+ - src/components/Navbar.jsx
+ - src/components/ScrollReveal.jsx
+ - src/components/CountUp.jsx
+ - src/components/Modal.jsx
+ - src/components/LayoutComponents.test.jsx
+ - src/index.css
+
+## Diff
+### src/components/Navbar.jsx
+```diff
+--- a/src/components/Navbar.jsx
++++ b/src/components/Navbar.jsx
+@@ -0,0 +1,79 @@
++import { useState, useEffect } from 'react';
+
++import { useNavigation, pages } from './Router';
+
++import { Menu, X } from 'lucide-react';
+
++
+
++export default function Navbar() {
+
++  const { currentPage, navigateTo } = useNavigation();
+
++  const [scrolled, setScrolled] = useState(false);
+
++  const [mobileOpen, setMobileOpen] = useState(false);
+
++
+
++  useEffect(() => {
+
++    const handleScroll = () => {
+
++      setScrolled(window.scrollY > 50);
+
++    };
+
++    window.addEventListener('scroll', handleScroll);
+
++    return () => window.removeEventListener('scroll', handleScroll);
+
++  }, []);
+
++
+
++  const handleNav = (page) => {
+
++    navigateTo(page);
+
++    setMobileOpen(false);
+
++  };
+
++
+
++  return (
+
++    <header className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
+
++      <div
+
++        className="navbar-logo"
+
++        onClick={() => handleNav('home')}
+
++        role="button"
+
++        tabIndex={0}
+
++        onKeyDown={(e) => {
+
++          if (e.key === 'Enter' || e.key === ' ') {
+
++            e.preventDefault();
+
++            handleNav('home');
+
++          }
+
++        }}
+
++      >
+
++        <span>ETERNAL EGYPT</span>
+
++      </div>
+
++      <nav className="navbar-links">
+
++        {pages.map((page) => (
+
++          <button
+
++            key={page}
+
++            className={`nav-btn ${currentPage === page ? 'active' : ''}`}
+
++            onClick={() => handleNav(page)}
+
++          >
+
++            {page.toUpperCase()}
+
++          </button>
+
++        ))}
+
++      </nav>
+
++      <button className="mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
+
++        {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+
++      </button>
+
++
+
++      {/* Mobile Navigation Drawer Backdrop */}
+
++      {mobileOpen && (
+
++        <div
+
++          className="mobile-drawer-backdrop"
+
++          onClick={() => setMobileOpen(false)}
+
++          data-testid="mobile-drawer-backdrop"
+
++        />
+
++      )}
+
++
+
++      {/* Mobile Navigation Drawer */}
+
++      <div className={`mobile-drawer ${mobileOpen ? 'open' : ''}`}>
+
++        <div className="mobile-drawer-content glass-panel">
+
++          {pages.map((page) => (
+
++            <button
+
++              key={page}
+
++              className={`mobile-nav-btn ${currentPage === page ? 'active' : ''}`}
+
++              onClick={() => handleNav(page)}
+
++            >
+
++              {page.toUpperCase()}
+
++            </button>
+
++          ))}
+
++        </div>
+
++      </div>
+
++    </header>
+
++  );
+
++}
+
+```
+
+### src/components/ScrollReveal.jsx
+```diff
+--- a/src/components/ScrollReveal.jsx
++++ b/src/components/ScrollReveal.jsx
+@@ -0,0 +1,38 @@
++/* eslint-disable react/prop-types */
+
++import { useEffect, useRef, useState } from 'react';
+
++
+
++export default function ScrollReveal({ children, delay = 0 }) {
+
++  const [isVisible, setIsVisible] = useState(false);
+
++  const ref = useRef(null);
+
++
+
++  useEffect(() => {
+
++    const observer = new IntersectionObserver(
+
++      ([entry]) => {
+
++        if (entry.isIntersecting) {
+
++          setIsVisible(true);
+
++          observer.unobserve(entry.target);
+
++        }
+
++      },
+
++      { threshold: 0.1 }
+
++    );
+
++
+
++    const currentRef = ref.current;
+
++    if (currentRef) {
+
++      observer.observe(currentRef);
+
++    }
+
++
+
++    return () => {
+
++      if (currentRef) observer.disconnect();
+
++    };
+
++  }, []);
+
++
+
++  return (
+
++    <div
+
++      ref={ref}
+
++      className={`scroll-reveal ${isVisible ? 'visible' : ''}`}
+
++      style={{ transitionDelay: `${delay}ms` }}
+
++    >
+
++      {children}
+
++    </div>
+
++  );
+
++}
+
+```
+
+### src/components/CountUp.jsx
+```diff
+--- a/src/components/CountUp.jsx
++++ b/src/components/CountUp.jsx
+@@ -0,0 +1,43 @@
++/* eslint-disable react/prop-types */
+
++import { useEffect, useState, useRef } from 'react';
+
++
+
++export default function CountUp({ end, suffix = '', duration = 1500 }) {
+
++  const [count, setCount] = useState(0);
+
++  const ref = useRef(null);
+
++  const hasAnimated = useRef(false);
+
++
+
++  useEffect(() => {
+
++    let animFrameId = null;
+
++    const observer = new IntersectionObserver(
+
++      ([entry]) => {
+
++        if (entry.isIntersecting && !hasAnimated.current) {
+
++          hasAnimated.current = true;
+
++          let startTimestamp = null;
+
++          const step = (timestamp) => {
+
++            if (!startTimestamp) startTimestamp = timestamp;
+
++            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+
++            setCount(Math.floor(progress * end));
+
++            if (progress < 1) {
+
++              animFrameId = window.requestAnimationFrame(step);
+
++            }
+
++          };
+
++          animFrameId = window.requestAnimationFrame(step);
+
++          observer.unobserve(entry.target);
+
++        }
+
++      },
+
++      { threshold: 0.1 }
+
++    );
+
++
+
++    const currentRef = ref.current;
+
++    if (currentRef) {
+
++      observer.observe(currentRef);
+
++    }
+
++
+
++    return () => {
+
++      if (animFrameId) window.cancelAnimationFrame(animFrameId);
+
++      if (currentRef) observer.disconnect();
+
++    };
+
++  }, [end, duration]);
+
++
+
++  return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
+
++}
+
+```
+
+### src/components/Modal.jsx
+```diff
+--- a/src/components/Modal.jsx
++++ b/src/components/Modal.jsx
+@@ -0,0 +1,20 @@
++/* eslint-disable react/prop-types */
+
++import { X } from 'lucide-react';
+
++
+
++export default function Modal({ isOpen, onClose, title, children }) {
+
++  if (!isOpen) return null;
+
++
+
++  return (
+
++    <div className="modal-overlay" onClick={onClose} data-testid="modal-overlay">
+
++      <div className="modal-container glass-panel" onClick={(e) => e.stopPropagation()}>
+
++        <div className="modal-header">
+
++          <h2>{title}</h2>
+
++          <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
+
++            <X size={20} />
+
++          </button>
+
++        </div>
+
++        <div className="modal-body">{children}</div>
+
++      </div>
+
++    </div>
+
++  );
+
++}
+
+```
+
+### src/components/LayoutComponents.test.jsx
+```diff
+--- a/src/components/LayoutComponents.test.jsx
++++ b/src/components/LayoutComponents.test.jsx
+@@ -0,0 +1,180 @@
++import { render, screen, fireEvent, act } from '@testing-library/react';
+
++import { expect, test, beforeAll, vi } from 'vitest';
+
++import CountUp from './CountUp';
+
++import Modal from './Modal';
+
++import ScrollReveal from './ScrollReveal';
+
++import Navbar from './Navbar';
+
++import { useNavigation, pages } from './Router';
+
++
+
++vi.mock('./Router', async (importOriginal) => {
+
++  const actual = await importOriginal();
+
++  return {
+
++    ...actual,
+
++    useNavigation: vi.fn(),
+
++  };
+
++});
+
++
+
++let rafCallback = null;
+
++
+
++beforeAll(() => {
+
++  global.IntersectionObserver = class {
+
++    constructor(cb) { this.cb = cb; }
+
++    observe(el) { this.cb([{ isIntersecting: true, target: el }]); }
+
++    unobserve() {}
+
++    disconnect() {}
+
++  };
+
++
+
++  vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+
++    rafCallback = cb;
+
++    return 1;
+
++  });
+
++});
+
++
+
++// CountUp Tests
+
++test('CountUp counts up to the end value', () => {
+
++  render(<CountUp end={100} duration={1000} suffix="%" />);
+
++  
+
++  // Initially, it should render 0
+
++  expect(screen.getByText(/0%/)).toBeInTheDocument();
+
++
+
++  // First frame (startTimestamp set at timestamp = 100)
+
++  act(() => {
+
++    rafCallback(100);
+
++  });
+
++  expect(screen.getByText(/0%/)).toBeInTheDocument();
+
++
+
++  // Second frame (timestamp = 600, progress = (600-100)/1000 = 0.5)
+
++  act(() => {
+
++    rafCallback(600);
+
++  });
+
++  expect(screen.getByText(/50%/)).toBeInTheDocument();
+
++
+
++  // Third frame (timestamp = 1100, progress = (1100-100)/1000 = 1.0)
+
++  act(() => {
+
++    rafCallback(1100);
+
++  });
+
++  expect(screen.getByText(/100%/)).toBeInTheDocument();
+
++});
+
++
+
++// Modal Tests
+
++test('Modal renders correctly when open and closed', () => {
+
++  const onClose = vi.fn();
+
++  
+
++  const { rerender } = render(
+
++    <Modal isOpen={false} onClose={onClose} title="Test Modal">
+
++      <div>Modal Content</div>
+
++    </Modal>
+
++  );
+
++
+
++  // Should not be in the document
+
++  expect(screen.queryByText('Test Modal')).not.toBeInTheDocument();
+
++
+
++  // Re-render as open
+
++  rerender(
+
++    <Modal isOpen={true} onClose={onClose} title="Test Modal">
+
++      <div>Modal Content</div>
+
++    </Modal>
+
++  );
+
++
+
++  expect(screen.getByText('Test Modal')).toBeInTheDocument();
+
++  expect(screen.getByText('Modal Content')).toBeInTheDocument();
+
++
+
++  // Click close button
+
++  fireEvent.click(screen.getByRole('button', { name: /close/i }));
+
++  expect(onClose).toHaveBeenCalledTimes(1);
+
++
+
++  // Click overlay
+
++  fireEvent.click(screen.getByTestId('modal-overlay'));
+
++  expect(onClose).toHaveBeenCalledTimes(2);
+
++});
+
++
+
++// ScrollReveal Tests
+
++test('ScrollReveal applies visible class when intersecting', () => {
+
++  const { container } = render(
+
++    <ScrollReveal delay={100}>
+
++      <div>Reveal Me</div>
+
++    </ScrollReveal>
+
++  );
+
++
+
++  const element = container.firstChild;
+
++  expect(element).toHaveClass('scroll-reveal');
+
++  expect(element).toHaveClass('visible');
+
++  expect(element).toHaveStyle('transition-delay: 100ms');
+
++});
+
++
+
++// Navbar Tests
+
++test('Navbar renders logo and all navigation links', () => {
+
++  const navigateToMock = vi.fn();
+
++  useNavigation.mockReturnValue({
+
++    currentPage: 'home',
+
++    navigateTo: navigateToMock,
+
++  });
+
++
+
++  render(<Navbar />);
+
++
+
++  // Check logo renders
+
++  expect(screen.getByText('ETERNAL EGYPT')).toBeInTheDocument();
+
++
+
++  // Check all page links render in desktop navbar
+
++  pages.forEach((page) => {
+
++    // There will be a desktop button and a mobile drawer button for each page
+
++    const buttons = screen.getAllByRole('button', { name: new RegExp(`^${page}$`, 'i') });
+
++    expect(buttons.length).toBeGreaterThanOrEqual(1);
+
++  });
+
++});
+
++
+
++test('Navbar triggers navigateTo when logo or buttons are clicked', () => {
+
++  const navigateToMock = vi.fn();
+
++  useNavigation.mockReturnValue({
+
++    currentPage: 'home',
+
++    navigateTo: navigateToMock,
+
++  });
+
++
+
++  render(<Navbar />);
+
++
+
++  // Click logo
+
++  const logo = screen.getByText('ETERNAL EGYPT').closest('.navbar-logo');
+
++  expect(logo).toBeInTheDocument();
+
++  fireEvent.click(logo);
+
++  expect(navigateToMock).toHaveBeenLastCalledWith('home');
+
++
+
++  // Trigger logo onKeyDown with Enter
+
++  fireEvent.keyDown(logo, { key: 'Enter', code: 'Enter' });
+
++  expect(navigateToMock).toHaveBeenLastCalledWith('home');
+
++
+
++  // Trigger logo onKeyDown with Space
+
++  fireEvent.keyDown(logo, { key: ' ', code: 'Space' });
+
++  expect(navigateToMock).toHaveBeenLastCalledWith('home');
+
++
+
++  // Click a navigation button (e.g. pyramids)
+
++  const pyramidsButtons = screen.getAllByRole('button', { name: /^pyramids$/i });
+
++  fireEvent.click(pyramidsButtons[0]);
+
++  expect(navigateToMock).toHaveBeenLastCalledWith('pyramids');
+
++});
+
++
+
++test('Navbar mobile drawer toggle and backdrop overlay dismissal', () => {
+
++  const navigateToMock = vi.fn();
+
++  useNavigation.mockReturnValue({
+
++    currentPage: 'home',
+
++    navigateTo: navigateToMock,
+
++  });
+
++
+
++  render(<Navbar />);
+
++
+
++  // Backdrop should not be present initially
+
++  expect(screen.queryByTestId('mobile-drawer-backdrop')).not.toBeInTheDocument();
+
++
+
++  // Toggle mobile menu open
+
++  const toggleBtn = screen.getByRole('button', { name: /toggle menu/i });
+
++  fireEvent.click(toggleBtn);
+
++
+
++  // Backdrop should now be visible
+
++  const backdrop = screen.getByTestId('mobile-drawer-backdrop');
+
++  expect(backdrop).toBeInTheDocument();
+
++
+
++  // Click backdrop to close
+
++  fireEvent.click(backdrop);
+
++
+
++  // Backdrop should be gone
+
++  expect(screen.queryByTestId('mobile-drawer-backdrop')).not.toBeInTheDocument();
+
++});
+
+```
+
+### src/index.css
+```diff
+--- a/src/index.css
++++ b/src/index.css
+@@ -47,6 +47,13 @@
+ @supports not ((backdrop-filter: blur(24px)) or (-webkit-backdrop-filter: blur(24px))) {
+
+   .glass-panel {
+
+     background: rgba(15, 18, 28, 0.95);
+
++  }
+
++  .navbar,
+
++  .navbar-scrolled {
+
++    background: rgba(11, 11, 15, 0.95);
+
++  }
+
++  .modal-overlay {
+
++    background: rgba(0, 0, 0, 0.85);
+
+   }
+
+ }
+
+ 
+
+@@ -128,3 +135,180 @@
+   animation: slideInBackward 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+ }
+
+ 
+
++/* Navbar Styling */
+
++.navbar {
+
++  position: fixed;
+
++  top: 0;
+
++  left: 0;
+
++  width: 100%;
+
++  height: 70px;
+
++  display: flex;
+
++  justify-content: space-between;
+
++  align-items: center;
+
++  padding: 0 2rem;
+
++  z-index: 1000;
+
++  background: rgba(11, 11, 15, 0.2);
+
++  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
++  backdrop-filter: blur(4px);
+
++  transition: all 0.3s ease;
+
++}
+
++.navbar-scrolled {
+
++  background: rgba(11, 11, 15, 0.85);
+
++  backdrop-filter: blur(24px);
+
++  border-bottom: 1px solid var(--glass-border);
+
++  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
++}
+
++.navbar-logo {
+
++  font-family: var(--font-heading);
+
++  font-size: 1.25rem;
+
++  font-weight: bold;
+
++  color: var(--color-gold);
+
++  cursor: pointer;
+
++}
+
++.navbar-links {
+
++  display: flex;
+
++  gap: 1.5rem;
+
++}
+
++.nav-btn {
+
++  background: none;
+
++  border: none;
+
++  color: var(--color-papyrus);
+
++  font-family: var(--font-body);
+
++  font-size: 0.85rem;
+
++  cursor: pointer;
+
++  padding: 0.5rem;
+
++  transition: color 0.3s;
+
++}
+
++.nav-btn:hover, .nav-btn.active {
+
++  color: var(--color-gold);
+
++}
+
++.mobile-toggle {
+
++  display: none;
+
++  background: none;
+
++  border: none;
+
++  color: var(--color-papyrus);
+
++  cursor: pointer;
+
++}
+
++.mobile-drawer-backdrop {
+
++  position: fixed;
+
++  top: 70px;
+
++  left: 0;
+
++  width: 100vw;
+
++  height: calc(100vh - 70px);
+
++  background: rgba(0, 0, 0, 0.5);
+
++  backdrop-filter: blur(4px);
+
++  -webkit-backdrop-filter: blur(4px);
+
++  z-index: 998;
+
++}
+
++.mobile-drawer {
+
++  position: fixed;
+
++  top: 70px;
+
++  right: -100%;
+
++  width: 250px;
+
++  height: calc(100vh - 70px);
+
++  z-index: 999;
+
++  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
++}
+
++.mobile-drawer.open {
+
++  right: 0;
+
++}
+
++.mobile-drawer-content {
+
++  height: 100%;
+
++  display: flex;
+
++  flex-direction: column;
+
++  padding: 2rem 1.5rem;
+
++  gap: 1.5rem;
+
++  border-radius: 0;
+
++  border-top: none;
+
++  border-bottom: none;
+
++  border-right: none;
+
++}
+
++.mobile-nav-btn {
+
++  background: none;
+
++  border: none;
+
++  color: var(--color-papyrus);
+
++  font-family: var(--font-body);
+
++  font-size: 1rem;
+
++  text-align: left;
+
++  cursor: pointer;
+
++  padding: 0.5rem 0;
+
++  transition: color 0.3s;
+
++  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
++}
+
++.mobile-nav-btn:hover, .mobile-nav-btn.active {
+
++  color: var(--color-gold);
+
++}
+
++@media (max-width: 900px) {
+
++  .navbar-links { display: none; }
+
++  .mobile-toggle { display: block; }
+
++}
+
++
+
++/* ScrollReveal Styling */
+
++.scroll-reveal {
+
++  opacity: 0;
+
++  transform: translateY(20px);
+
++  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+
++}
+
++.scroll-reveal.visible {
+
++  opacity: 1;
+
++  transform: translateY(0);
+
++}
+
++
+
++/* Modal Styling */
+
++.modal-overlay {
+
++  position: fixed;
+
++  top: 0;
+
++  left: 0;
+
++  width: 100vw;
+
++  height: 100vh;
+
++  background: rgba(0, 0, 0, 0.7);
+
++  backdrop-filter: blur(12px);
+
++  display: flex;
+
++  justify-content: center;
+
++  align-items: center;
+
++  z-index: 2000;
+
++}
+
++.modal-container {
+
++  width: 90%;
+
++  max-width: 600px;
+
++  max-height: 80vh;
+
++  display: flex;
+
++  flex-direction: column;
+
++  padding: 2rem;
+
++  animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
++}
+
++.modal-header {
+
++  display: flex;
+
++  justify-content: space-between;
+
++  align-items: center;
+
++  border-bottom: 1px solid var(--glass-border);
+
++  padding-bottom: 1rem;
+
++  margin-bottom: 1rem;
+
++}
+
++.modal-close-btn {
+
++  background: none;
+
++  border: none;
+
++  color: var(--color-papyrus);
+
++  cursor: pointer;
+
++}
+
++.modal-close-btn:hover {
+
++  color: var(--color-gold);
+
++}
+
++.modal-body {
+
++  overflow-y: auto;
+
++  font-size: 0.95rem;
+
++  line-height: 1.6;
+
++  color: var(--color-papyrus);
+
++}
+
++@keyframes modalFadeIn {
+
++  from {
+
++    opacity: 0;
+
++    transform: scale(0.95);
+
++  }
+
++  to {
+
++    opacity: 1;
+
++    transform: scale(1);
+
++  }
+
++}
+
++
+
++
+
+```
+

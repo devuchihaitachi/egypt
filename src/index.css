@@ -1656,7 +1656,7 @@ html[dir="rtl"] .faq-question-btn {
 .god-card-content {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   padding: 1.2rem 1.5rem;
   gap: 1.2rem;
   height: 100%;
@@ -1694,6 +1694,13 @@ html[dir="rtl"] .faq-question-btn {
   font-family: var(--font-body);
   color: var(--color-gold);
   opacity: 0.8;
+}
+.god-card-desc {
+  font-size: 0.85rem;
+  color: var(--color-papyrus);
+  opacity: 0.75;
+  margin-top: 0.4rem;
+  line-height: 1.4;
 }
 
 /* Split Modal layout */

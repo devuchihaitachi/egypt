@@ -1,0 +1,314 @@
+:root {
+  --bg-main: #0b0b0f;
+  --bg-glow: radial-gradient(circle at 50% 50%, #131927 0%, #0b0b0f 80%);
+  --color-sandstone: #e2c29d;
+  --color-papyrus: #f2e7d5;
+  --color-gold: #d4af37;
+  --color-lapis: #23497c;
+  --glass-fill: rgba(15, 18, 28, 0.65);
+  --glass-border: rgba(212, 175, 55, 0.18);
+  --glass-border-hover: rgba(212, 175, 55, 0.35);
+  --font-heading: 'Cinzel', serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg-main);
+  background-image: var(--bg-glow);
+  color: var(--color-papyrus);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  color: var(--color-sandstone);
+  letter-spacing: 1px;
+}
+
+/* Glassmorphism class */
+.glass-panel {
+  background: var(--glass-fill);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 8px 32px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@supports not ((backdrop-filter: blur(24px)) or (-webkit-backdrop-filter: blur(24px))) {
+  .glass-panel {
+    background: rgba(15, 18, 28, 0.95);
+  }
+  .navbar,
+  .navbar-scrolled {
+    background: rgba(11, 11, 15, 0.95);
+  }
+  .modal-overlay {
+    background: rgba(0, 0, 0, 0.85);
+  }
+}
+
+/* Specular Light Sweep animation */
+.glass-panel-interactive {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-panel-interactive::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(212, 175, 55, 0.15) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg) translateX(-200%);
+  transition: transform 0.75s ease-out;
+}
+
+.glass-panel-interactive:hover::after {
+  transform: skewX(-25deg) translateX(300%);
+}
+
+.glass-panel-interactive:hover {
+  border-color: var(--glass-border-hover);
+  transform: translateY(-4px);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12), 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+.router-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.page-view {
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 80px; /* navbar offset */
+  box-sizing: border-box;
+}
+
+/* Fade & Slide animation for pages */
+@keyframes slideInForward {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInBackward {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.page-enter-forward {
+  animation: slideInForward 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.page-enter-backward {
+  animation: slideInBackward 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Navbar Styling */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  z-index: 1000;
+  background: rgba(11, 11, 15, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+.navbar-scrolled {
+  background: rgba(11, 11, 15, 0.85);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+.navbar-logo {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--color-gold);
+  cursor: pointer;
+}
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--color-papyrus);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.3s;
+}
+.nav-btn:hover, .nav-btn.active {
+  color: var(--color-gold);
+}
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--color-papyrus);
+  cursor: pointer;
+}
+.mobile-drawer-backdrop {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 70px);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+}
+.mobile-drawer {
+  position: fixed;
+  top: 70px;
+  right: -100%;
+  width: 250px;
+  height: calc(100vh - 70px);
+  z-index: 999;
+  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mobile-drawer.open {
+  right: 0;
+}
+.mobile-drawer-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+  gap: 1.5rem;
+  border-radius: 0;
+  border-top: none;
+  border-bottom: none;
+  border-right: none;
+}
+.mobile-nav-btn {
+  background: none;
+  border: none;
+  color: var(--color-papyrus);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.3s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.mobile-nav-btn:hover, .mobile-nav-btn.active {
+  color: var(--color-gold);
+}
+@media (max-width: 900px) {
+  .navbar-links { display: none; }
+  .mobile-toggle { display: block; }
+}
+
+/* ScrollReveal Styling */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Modal Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.modal-container {
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: var(--color-papyrus);
+  cursor: pointer;
+}
+.modal-close-btn:hover {
+  color: var(--color-gold);
+}
+.modal-body {
+  overflow-y: auto;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-papyrus);
+}
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+

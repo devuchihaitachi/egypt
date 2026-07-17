@@ -5,15 +5,14 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Pyramids from './pages/Pyramids';
 import Monuments from './pages/Monuments';
+import History from './pages/History';
 import Pharaohs from './pages/Pharaohs';
-import Gods from './pages/Gods';
 import Hieroglyphics from './pages/Hieroglyphics';
 import PlanVisit from './pages/PlanVisit';
 import Culture from './pages/Culture';
 import GEM from './pages/GEM';
 import UNESCO from './pages/UNESCO';
 import Discoveries from './pages/Discoveries';
-import Timeline from './pages/Timeline';
 
 function AppContent() {
   const { transitionDirection } = useNavigation();
@@ -30,8 +29,8 @@ function AppContent() {
           <Route path="/:lang" element={<Home />} />
           <Route path="/:lang/pyramids" element={<Pyramids />} />
           <Route path="/:lang/monuments" element={<Monuments />} />
+          <Route path="/:lang/history" element={<History />} />
           <Route path="/:lang/pharaohs" element={<Pharaohs />} />
-          <Route path="/:lang/gods" element={<Gods />} />
           <Route path="/:lang/culture" element={<Culture />} />
           <Route path="/:lang/gem" element={<GEM />} />
           <Route path="/:lang/unesco" element={<UNESCO />} />

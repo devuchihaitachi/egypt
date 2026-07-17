@@ -4,8 +4,8 @@ export const translations = {
       home: 'Home',
       pyramids: 'Pyramids',
       monuments: 'Monuments',
-      pharaohs: 'History',
-      gods: 'Pharaohs & Gods',
+      history: 'History',
+      pharaohs: 'Pharaohs',
       culture: 'Culture',
       gem: 'GEM',
       unesco: 'UNESCO',
@@ -32,12 +32,12 @@ export const translations = {
         monumentsTitle: 'Temples & Monuments',
         monumentsDesc: 'Vast halls of stone, carved with hieroglyphs honoring kings and deities across the sacred Nile banks.',
         monumentsLink: 'Explore Temples',
-        pharaohsTitle: 'Pharaohs & Dynasties',
-        pharaohsDesc: 'Witness the reigns of god-kings like Khufu, Hatshepsut, Ramses II, and Tutankhamun throughout the eras.',
-        pharaohsLink: 'Explore Pharaohs',
-        godsTitle: 'Pharaohs & Gods',
-        godsDesc: 'Explore the legacy of Egypt\'s greatest rulers and the mythology of its ancient gods.',
-        godsLink: 'Explore Pharaohs & Gods'
+        historyTitle: 'Pharaohs & Dynasties',
+        historyDesc: 'Witness the reigns of god-kings like Khufu, Hatshepsut, Ramses II, and Tutankhamun throughout the eras.',
+        historyLink: 'Explore History',
+        pharaohsTitle: 'Pharaohs & Gods',
+        pharaohsDesc: 'Explore the legacy of Egypt\'s greatest rulers and the mythology of its ancient gods.',
+        pharaohsLink: 'Explore Pharaohs'
       }
     },
     pyramids: {
@@ -101,6 +101,7 @@ export const translations = {
       nubiaRescueDesc: 'In the 1960s, a monumental UNESCO-led international engineering campaign dismantled and relocated the Abu Simbel and Philae temples 65m higher to save them from being flooded by Lake Nasser after the construction of the Aswan High Dam.',
       categories: {
         pharaonic: 'Pharaonic & Ptolemaic',
+        obelisks: 'Ancient Egyptian Obelisks',
         grecoRoman: 'Greco-Roman',
         coptic: 'Coptic & Christian',
         islamic: 'Islamic & Fortresses',
@@ -108,6 +109,48 @@ export const translations = {
         natural: 'Oases & Natural'
       },
       items: {
+        unfinishedObelisk: {
+          name: 'The Unfinished Obelisk',
+          location: 'Aswan, Egypt',
+          age: 'c. 1470 BC (Hatshepsut)',
+          desc: 'The largest known ancient obelisk, lying in its quarry. It cracked during creation, halting work, and remains a unique testament to ancient quarrying methods.'
+        },
+        hatshepsutObelisk: {
+          name: 'Hatshepsut Obelisk',
+          location: 'Karnak Temple, Luxor, Egypt',
+          age: 'c. 1458 BC',
+          desc: 'One of the tallest standing ancient obelisks (nearly 30m), carved from a single piece of pink granite to celebrate Hatshepsut\'s reign.'
+        },
+        senusretObelisk: {
+          name: 'Senusret I Obelisk',
+          location: 'Heliopolis, Cairo, Egypt',
+          age: 'c. 1950 BC',
+          desc: 'The oldest standing obelisk in the world, erected to mark the Heb Sed festival of the Middle Kingdom pharaoh Senusret I.'
+        },
+        luxorParisObelisk: {
+          name: 'Luxor Obelisk of Paris',
+          location: 'Place de la Concorde, Paris, France',
+          age: 'c. 1250 BC (Ramesses II)',
+          desc: 'Originally erected at Luxor Temple. Gifted to France in 1830 by Muhammad Ali Pasha. It stands 23m high and was topped with a golden pyramidion in 1998.'
+        },
+        londonNeedle: {
+          name: 'Cleopatra\'s Needle (London)',
+          location: 'Victoria Embankment, London, UK',
+          age: 'c. 1450 BC (Thutmose III)',
+          desc: 'Erected originally in Heliopolis. Transported to Alexandria and later gifted to the UK. It survived a severe storm at sea during transport in 1877.'
+        },
+        newyorkNeedle: {
+          name: 'Cleopatra\'s Needle (New York)',
+          location: 'Central Park, New York City, USA',
+          age: 'c. 1450 BC (Thutmose III)',
+          desc: 'Twin of the London obelisk, erected in Heliopolis. Gifted to the United States and erected in Central Park in 1881.'
+        },
+        lateranRomeObelisk: {
+          name: 'The Lateran Obelisk (Rome)',
+          location: 'Piazza San Giovanni in Laterano, Rome, Italy',
+          age: 'c. 1400 BC (Thutmose III & IV)',
+          desc: 'The tallest standing ancient Egyptian obelisk in the world (32.5m, 45.7m with base). Originally at Karnak Temple, moved to Rome in 357 AD.'
+        },
         sphinx: {
           name: 'Great Sphinx of Giza',
           location: 'Giza Plateau',
@@ -258,11 +301,11 @@ export const translations = {
           age: '115 years old',
           desc: 'An architectural masterpiece inspired by Hindu temples of Angkor Wat and Orissa, built by the Belgian industrialist Baron Empan.'
         },
-        suezDam: {
-          name: 'Suez Canal & High Dam',
-          location: 'Suez / Aswan',
-          age: 'Modern Era',
-          desc: 'Engineering monuments. The Suez Canal connects East and West trade, while the Aswan High Dam reshaped Egypt\'s economy and geography.'
+        suezCanal: {
+          name: 'The Suez Canal',
+          location: 'Suez, Egypt',
+          age: 'Opened in 1869',
+          desc: 'One of the world\'s most important shipping routes, connecting the Mediterranean Sea to the Red Sea, enabling direct maritime trade between Europe and Asia.'
         },
         montazah: {
           name: 'Montazah Palace & Gardens',
@@ -296,7 +339,7 @@ export const translations = {
         }
       }
     },
-    pharaohs: {
+    history: {
       title: 'Egyptian Historical Timeline',
       subtitle: 'Explore the major eras and rulers that shaped the Nile Valley over 5,000 years.',
       tabDynasties: 'Dynasties & Pharaohs',
@@ -380,8 +423,8 @@ export const translations = {
         }
       }
     },
-    gods: {
-      title: 'Pharaohs & Ancient Gods',
+    pharaohs: {
+      title: 'Pharaohs & Gods',
       subtitle: 'Explore the legacy of Egypt\'s greatest rulers and the mythology of its ancient gods.',
       readMyth: 'READ DETAILS →',
       copyPrompt: 'Copy AI Prompt',
@@ -1061,8 +1104,8 @@ export const translations = {
       home: 'الرئيسية',
       pyramids: 'الأهرامات',
       monuments: 'المعالم',
-      pharaohs: 'التاريخ',
-      gods: 'الفراعنة والآلهة القديمة',
+      history: 'التاريخ',
+      pharaohs: 'الفراعنة',
       culture: 'العلوم والثقافة',
       gem: 'المتحف الكبير',
       unesco: 'التراث العالمي',
@@ -1089,12 +1132,12 @@ export const translations = {
         monumentsTitle: 'المعابد والمسلات',
         monumentsDesc: 'أروقة حجرية عملاقة منقوشة بالهيروغليفية تروي بطولات الملوك وقصص الآلهة على ضفاف النيل المقدس.',
         monumentsLink: 'استكشف المعابد',
-        pharaohsTitle: 'الفراعنة والأسر الحاكمة',
-        pharaohsDesc: 'تتبع حكم الملوك والملكات العظام مثل خوفو، حتشبسوت، رمسيس الثاني، وتوت عنخ آمون عبر العصور التاريخية.',
-        pharaohsLink: 'استكشف الفراعنة',
-        godsTitle: 'الفراعنة والآلهة القديمة',
-        godsDesc: 'اكتشف إرث حكام الفراعنة العظام وأساطير الآلهة المصرية القديمة التي حكمت معتقداتهم.',
-        godsLink: 'استكشف الفراعنة والآلهة'
+        historyTitle: 'الفراعنة والأسر الحاكمة',
+        historyDesc: 'تتبع حكم الملوك والملكات العظام مثل خوفو، حتشبسوت، رمسيس الثاني، وتوت عنخ آمون عبر العصور التاريخية.',
+        historyLink: 'استكشف التاريخ',
+        pharaohsTitle: 'الفراعنة والآلهة القديمة',
+        pharaohsDesc: 'اكتشف إرث حكام الفراعنة العظام وأساطير الآلهة المصرية القديمة التي حكمت معتقداتهم.',
+        pharaohsLink: 'استكشف الفراعنة'
       }
     },
     pyramids: {
@@ -1158,6 +1201,7 @@ export const translations = {
       nubiaRescueDesc: 'في الستينيات، وتحت إشراف اليونسكو وبمشاركة هندسية دولية، تم تفكيك معبد أبو سمبل ومعبد فيلة بالكامل ونقلهما لموقع أعلى بـ 65 متراً لحمايتهما من الغرق تحت مياه بحيرة ناصر بعد تشييد السد العالي في أسوان.',
       categories: {
         pharaonic: 'الفرعونية والبطلمية',
+        obelisks: 'المسلات المصرية القديمة',
         grecoRoman: 'اليونانية والرومانية',
         coptic: 'القبطية والمسيحية',
         islamic: 'الإسلامية والقلاع',
@@ -1165,6 +1209,48 @@ export const translations = {
         natural: 'المحميات والواحات'
       },
       items: {
+        unfinishedObelisk: {
+          name: 'المسلة غير المكتملة',
+          location: 'أسوان، مصر',
+          age: 'حوالي 1470 ق.م (عهد حتشبسوت)',
+          desc: 'أكبر مسلة قديمة معروفة، ترقد ممددة في محاجر أسوان. تصدعت أثناء نحتها وتشكيلها مما تسبب في توقف العمل، وهي شاهد فريد على تقنيات النحت وقطع الأحجار قديماً.'
+        },
+        hatshepsutObelisk: {
+          name: 'مسلة الملكة حتشبسوت',
+          location: 'معبد الكرنك، الأقصر، مصر',
+          age: 'حوالي 1458 ق.م',
+          desc: 'من أطول المسلات القائمة في العالم القديم (ارتفاعها يقارب 30 متراً)، نحتت من قطعة واحدة من الجرانيت الوردي احتفاءً بعهد الملكة حتشبسوت.'
+        },
+        senusretObelisk: {
+          name: 'مسلة سنوسرت الأول',
+          location: 'المطرية (هليوبوليس)، القاهرة، مصر',
+          age: 'حوالي 1950 ق.م',
+          desc: 'أقدم مسلة قائمة في العالم، أقيمت لتخليد اليوبيل الذهبي (عيد السد) للفرعون سنوسرت الأول من ملوك الدولة الوسطى.'
+        },
+        luxorParisObelisk: {
+          name: 'مسلة الأقصر في باريس',
+          location: 'ميدان الكونكورد، باريس، فرنسا',
+          age: 'حوالي 1250 ق.م (عهد رمسيس الثاني)',
+          desc: 'كانت تقف في الأصل أمام معبد الأقصر. أهداها محمد علي باشا لفرنسا عام 1830. ترتفع 23 متراً وتوجت بهرم ذهبي صغير في قمتها عام 1998.'
+        },
+        londonNeedle: {
+          name: 'مسلة لندن (إبرة كليوباترا)',
+          location: 'رصيف فيكتوريا، لندن، بريطانيا',
+          age: 'حوالي 1450 ق.م (عهد تحتمس الثالث)',
+          desc: 'أقيمت في الأصل في هليوبوليس، ثم نقلت للإسكندرية، وأهديت لبريطانيا لاحقاً. نجت بمعجزة من عاصفة بحرية شديدة أثناء نقلها على متن سفينة مقطورة عام 1877.'
+        },
+        newyorkNeedle: {
+          name: 'مسلة نيويورك (إبرة كليوباترا)',
+          location: 'سنترال بارك، نيويورك، أمريكا',
+          age: 'حوالي 1450 ق.م (عهد تحتمس الثالث)',
+          desc: 'التوأم لمسلة لندن، شيدت في هليوبوليس ونقلت للإسكندرية. أهديت للولايات المتحدة ونصبت في حديقة سنترال بارك بمدينة نيويورك عام 1881.'
+        },
+        lateranRomeObelisk: {
+          name: 'مسلة لاتيران (روما)',
+          location: 'ساحة سان جيوفاني، روما، إيطاليا',
+          age: 'حوالي 1400 ق.م (عهد تحتمس الثالث والرابع)',
+          desc: 'أطول مسلة مصرية قديمة قائمة في العالم (ارتفاعها 32.5 متر، ومع القاعدة تصل لـ 45.7 متر). كانت في الأصل بمعبد الكرنك ونقلت لروما عام 357 م.'
+        },
         sphinx: {
           name: 'تمثال أبو الهول العظيم',
           location: 'هضبة الجيزة',
@@ -1315,11 +1401,11 @@ export const translations = {
           age: '115 عام',
           desc: 'تحفة معمارية أسطورية شيدها المليونير البلجيكي البارون إمبان، ومصمم بشكل خارجي فريد على طراز المعابد الهندية الكلاسيكية.'
         },
-        suezDam: {
-          name: 'قناة السويس والسد العالي',
-          location: 'الإسماعيلية / أسوان',
-          age: 'عصر حديث',
-          desc: 'منجزات هندسية كبرى غيرت الجغرافيا والاقتصاد؛ فقناة السويس شريان الملاحة العالمي، والسد العالي حامي مصر من الفيضانات ومولد الكهرباء.'
+        suezCanal: {
+          name: 'قناة السويس',
+          location: 'قناة السويس، مصر',
+          age: 'افتتحت عام 1869',
+          desc: 'أحد أهم الممرات المائية في العالم، تربط بين البحرين الأحمر والمتوسط، وتسمح بمرور حركة التجارة البحرية المباشرة بين أوروبا وآسيا وهي شريان الاقتصاد والملاحة العالمي.'
         },
         montazah: {
           name: 'قصر وحدائق المنتزه',
@@ -1353,7 +1439,7 @@ export const translations = {
         }
       }
     },
-    pharaohs: {
+    history: {
       title: 'التسلسل الزمني لتاريخ مصر',
       subtitle: 'استكشف الفترات والعهود التاريخية الكبرى التي شكلت وادي النيل على مدى 5000 عام.',
       tabDynasties: 'الأسر والفراعنة',
@@ -1437,8 +1523,8 @@ export const translations = {
         }
       }
     },
-    gods: {
-      title: 'الفراعنة والآلهة القديمة',
+    pharaohs: {
+      title: 'الفراعنة والآلهة',
       subtitle: 'استكشف إرث أشهر حكام مصر القديمة وحكايات الآلهة التي شكلت معتقدات ووجدان المصريين القدماء.',
       readMyth: 'اقرأ التفاصيل ←',
       copyPrompt: 'نسخ الوصف للذكاء الاصطناعي',

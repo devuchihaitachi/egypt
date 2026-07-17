@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -10,8 +9,8 @@ export const pages = [
   'home',
   'pyramids',
   'monuments',
+  'history',
   'pharaohs',
-  'gods',
   'culture',
   'gem',
   'unesco',

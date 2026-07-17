@@ -1,0 +1,1979 @@
+# Review package (manual diff)
+
+## Files changed
+ - src/App.jsx
+ - src/App.test.jsx
+ - src/index.css
+ - index.html
+
+## Diff
+### src/App.jsx
+```diff
+--- a/src/App.jsx
++++ b/src/App.jsx
+@@ -1,18 +1,48 @@
+-import { NavigationProvider } from './components/Router';
+
++import { NavigationProvider, useNavigation } from './components/Router';
+
++import Navbar from './components/Navbar';
+
++import Home from './pages/Home';
+
++import Pyramids from './pages/Pyramids';
+
++import Monuments from './pages/Monuments';
+
++import Pharaohs from './pages/Pharaohs';
+
++import Gods from './pages/Gods';
+
++import Hieroglyphics from './pages/Hieroglyphics';
+
++import Gallery from './pages/Gallery';
+
++import PlanVisit from './pages/PlanVisit';
+
++import About from './pages/About';
+
+ 
+
+-function App() {
+
++const pageComponents = {
+
++  home: Home,
+
++  pyramids: Pyramids,
+
++  monuments: Monuments,
+
++  pharaohs: Pharaohs,
+
++  gods: Gods,
+
++  hieroglyphics: Hieroglyphics,
+
++  gallery: Gallery,
+
++  visit: PlanVisit,
+
++  about: About,
+
++};
+
++
+
++function AppContent() {
+
++  const { currentPage, transitionDirection } = useNavigation();
+
++  const PageComponent = pageComponents[currentPage] || Home;
+
++
+
++  return (
+
++    <div className="app-shell">
+
++      <Navbar />
+
++      <main
+
++        key={currentPage}
+
++        className={`page-transition page-transition-${transitionDirection}`}
+
++      >
+
++        <PageComponent />
+
++      </main>
+
++    </div>
+
++  );
+
++}
+
++
+
++export default function App() {
+
+   return (
+
+     <NavigationProvider>
+
+-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+
+-        <div className="glass-panel glass-panel-interactive" style={{ padding: '2rem', textAlign: 'center', maxWidth: '400px' }}>
+
+-          <h1>Eternal Egypt</h1>
+
+-          <p style={{ marginTop: '1rem', color: 'var(--color-papyrus)' }}>
+
+-            Experience the majesty of ancient history.
+
+-          </p>
+
+-        </div>
+
+-      </div>
+
++      <AppContent />
+
+     </NavigationProvider>
+
+   );
+
+ }
+
+-
+
+-export default App;
+
+```
+
+### src/App.test.jsx
+```diff
+--- a/src/App.test.jsx
++++ b/src/App.test.jsx
+@@ -0,0 +1,20 @@
++import { render, screen } from '@testing-library/react';
+
++import { describe, it, expect, beforeAll } from 'vitest';
+
++import App from './App';
+
++
+
++describe('App', () => {
+
++  beforeAll(() => {
+
++    global.IntersectionObserver = class {
+
++      constructor(cb) { this.cb = cb; }
+
++      observe(el) { this.cb([{ isIntersecting: true, target: el }]); }
+
++      unobserve() {}
+
++      disconnect() {}
+
++    };
+
++  });
+
++
+
++  it('renders Eternal Egypt heading', () => {
+
++    render(<App />);
+
++    expect(screen.getByText('Eternal Egypt')).toBeInTheDocument();
+
++  });
+
++});
+
++
+
+```
+
+### src/index.css
+```diff
+--- a/src/index.css
++++ b/src/index.css
+@@ -0,0 +1,879 @@
++:root {
+
++  --bg-main: #0b0b0f;
+
++  --bg-glow: radial-gradient(circle at 50% 50%, #131927 0%, #0b0b0f 80%);
+
++  --color-sandstone: #e2c29d;
+
++  --color-papyrus: #f2e7d5;
+
++  --color-gold: #d4af37;
+
++  --color-lapis: #23497c;
+
++  --glass-fill: rgba(15, 18, 28, 0.65);
+
++  --glass-border: rgba(212, 175, 55, 0.18);
+
++  --glass-border-hover: rgba(212, 175, 55, 0.35);
+
++  --font-heading: 'Cinzel', serif;
+
++  --font-body: 'Inter', sans-serif;
+
++}
+
++
+
++* {
+
++  box-sizing: border-box;
+
++  margin: 0;
+
++  padding: 0;
+
++}
+
++
+
++body {
+
++  background: var(--bg-main);
+
++  background-image: var(--bg-glow);
+
++  color: var(--color-papyrus);
+
++  font-family: var(--font-body);
+
++  overflow-x: hidden;
+
++  min-height: 100vh;
+
++}
+
++
+
++h1, h2, h3, h4 {
+
++  font-family: var(--font-heading);
+
++  color: var(--color-sandstone);
+
++  letter-spacing: 1px;
+
++}
+
++
+
++/* Glassmorphism class */
+
++.glass-panel {
+
++  background: var(--glass-fill);
+
++  backdrop-filter: blur(24px) saturate(130%);
+
++  -webkit-backdrop-filter: blur(24px) saturate(130%);
+
++  border: 1px solid var(--glass-border);
+
++  border-radius: 12px;
+
++  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 8px 32px rgba(0, 0, 0, 0.5);
+
++  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+
++}
+
++
+
++@supports not ((backdrop-filter: blur(24px)) or (-webkit-backdrop-filter: blur(24px))) {
+
++  .glass-panel {
+
++    background: rgba(15, 18, 28, 0.95);
+
++  }
+
++  .navbar,
+
++  .navbar-scrolled {
+
++    background: rgba(11, 11, 15, 0.95);
+
++  }
+
++  .modal-overlay {
+
++    background: rgba(0, 0, 0, 0.85);
+
++  }
+
++}
+
++
+
++/* Specular Light Sweep animation */
+
++.glass-panel-interactive {
+
++  position: relative;
+
++  overflow: hidden;
+
++}
+
++
+
++.glass-panel-interactive::after {
+
++  content: '';
+
++  position: absolute;
+
++  top: 0;
+
++  left: 0;
+
++  width: 50%;
+
++  height: 100%;
+
++  background: linear-gradient(
+
++    to right,
+
++    rgba(255, 255, 255, 0) 0%,
+
++    rgba(212, 175, 55, 0.15) 50%,
+
++    rgba(255, 255, 255, 0) 100%
+
++  );
+
++  transform: skewX(-25deg) translateX(-200%);
+
++  transition: transform 0.75s ease-out;
+
++}
+
++
+
++.glass-panel-interactive:hover::after {
+
++  transform: skewX(-25deg) translateX(300%);
+
++}
+
++
+
++.glass-panel-interactive:hover {
+
++  border-color: var(--glass-border-hover);
+
++  transform: translateY(-4px);
+
++  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12), 0 12px 40px rgba(0, 0, 0, 0.6);
+
++}
+
++
+
++.router-container {
+
++  position: relative;
+
++  width: 100%;
+
++  min-height: 100vh;
+
++  overflow-x: hidden;
+
++}
+
++
+
++.page-view {
+
++  width: 100%;
+
++  min-height: 100vh;
+
++  padding-top: 80px; /* navbar offset */
+
++  box-sizing: border-box;
+
++}
+
++
+
++/* Fade & Slide animation for pages */
+
++@keyframes slideInForward {
+
++  from {
+
++    opacity: 0;
+
++    transform: translateX(100%);
+
++  }
+
++  to {
+
++    opacity: 1;
+
++    transform: translateX(0);
+
++  }
+
++}
+
++
+
++@keyframes slideInBackward {
+
++  from {
+
++    opacity: 0;
+
++    transform: translateX(-100%);
+
++  }
+
++  to {
+
++    opacity: 1;
+
++    transform: translateX(0);
+
++  }
+
++}
+
++
+
++.page-enter-forward {
+
++  animation: slideInForward 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
++}
+
++
+
++.page-enter-backward {
+
++  animation: slideInBackward 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
++}
+
++
+
++/* Navbar Styling */
+
++.navbar {
+
++  position: fixed;
+
++  top: 0;
+
++  left: 0;
+
++  width: 100%;
+
++  height: 70px;
+
++  display: flex;
+
++  justify-content: space-between;
+
++  align-items: center;
+
++  padding: 0 2rem;
+
++  z-index: 1000;
+
++  background: rgba(11, 11, 15, 0.2);
+
++  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
++  backdrop-filter: blur(4px);
+
++  transition: all 0.3s ease;
+
++}
+
++.navbar-scrolled {
+
++  background: rgba(11, 11, 15, 0.85);
+
++  backdrop-filter: blur(24px);
+
++  border-bottom: 1px solid var(--glass-border);
+
++  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
++}
+
++.navbar-logo {
+
++  font-family: var(--font-heading);
+
++  font-size: 1.25rem;
+
++  font-weight: bold;
+
++  color: var(--color-gold);
+
++  cursor: pointer;
+
++}
+
++.navbar-links {
+
++  display: flex;
+
++  gap: 1.5rem;
+
++}
+
++.nav-btn {
+
++  background: none;
+
++  border: none;
+
++  color: var(--color-papyrus);
+
++  font-family: var(--font-body);
+
++  font-size: 0.85rem;
+
++  cursor: pointer;
+
++  padding: 0.5rem;
+
++  transition: color 0.3s;
+
++}
+
++.nav-btn:hover, .nav-btn.active {
+
++  color: var(--color-gold);
+
++}
+
++.mobile-toggle {
+
++  display: none;
+
++  background: none;
+
++  border: none;
+
++  color: var(--color-papyrus);
+
++  cursor: pointer;
+
++}
+
++.mobile-drawer-backdrop {
+
++  position: fixed;
+
++  top: 70px;
+
++  left: 0;
+
++  width: 100vw;
+
++  height: calc(100vh - 70px);
+
++  background: rgba(0, 0, 0, 0.5);
+
++  backdrop-filter: blur(4px);
+
++  -webkit-backdrop-filter: blur(4px);
+
++  z-index: 998;
+
++}
+
++.mobile-drawer {
+
++  position: fixed;
+
++  top: 70px;
+
++  right: -100%;
+
++  width: 250px;
+
++  height: calc(100vh - 70px);
+
++  z-index: 999;
+
++  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
++}
+
++.mobile-drawer.open {
+
++  right: 0;
+
++}
+
++.mobile-drawer-content {
+
++  height: 100%;
+
++  display: flex;
+
++  flex-direction: column;
+
++  padding: 2rem 1.5rem;
+
++  gap: 1.5rem;
+
++  border-radius: 0;
+
++  border-top: none;
+
++  border-bottom: none;
+
++  border-right: none;
+
++}
+
++.mobile-nav-btn {
+
++  background: none;
+
++  border: none;
+
++  color: var(--color-papyrus);
+
++  font-family: var(--font-body);
+
++  font-size: 1rem;
+
++  text-align: left;
+
++  cursor: pointer;
+
++  padding: 0.5rem 0;
+
++  transition: color 0.3s;
+
++  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
++}
+
++.mobile-nav-btn:hover, .mobile-nav-btn.active {
+
++  color: var(--color-gold);
+
++}
+
++@media (max-width: 900px) {
+
++  .navbar-links { display: none; }
+
++  .mobile-toggle { display: block; }
+
++}
+
++
+
++/* ScrollReveal Styling */
+
++.scroll-reveal {
+
++  opacity: 0;
+
++  transform: translateY(20px);
+
++  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+
++}
+
++.scroll-reveal.visible {
+
++  opacity: 1;
+
++  transform: translateY(0);
+
++}
+
++
+
++/* Modal Styling */
+
++.modal-overlay {
+
++  position: fixed;
+
++  top: 0;
+
++  left: 0;
+
++  width: 100vw;
+
++  height: 100vh;
+
++  background: rgba(0, 0, 0, 0.7);
+
++  backdrop-filter: blur(12px);
+
++  display: flex;
+
++  justify-content: center;
+
++  align-items: center;
+
++  z-index: 2000;
+
++}
+
++.modal-container {
+
++  width: 90%;
+
++  max-width: 600px;
+
++  max-height: 80vh;
+
++  display: flex;
+
++  flex-direction: column;
+
++  padding: 2rem;
+
++  animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
++}
+
++.modal-header {
+
++  display: flex;
+
++  justify-content: space-between;
+
++  align-items: center;
+
++  border-bottom: 1px solid var(--glass-border);
+
++  padding-bottom: 1rem;
+
++  margin-bottom: 1rem;
+
++}
+
++.modal-close-btn {
+
++  background: none;
+
++  border: none;
+
++  color: var(--color-papyrus);
+
++  cursor: pointer;
+
++}
+
++.modal-close-btn:hover {
+
++  color: var(--color-gold);
+
++}
+
++.modal-body {
+
++  overflow-y: auto;
+
++  font-size: 0.95rem;
+
++  line-height: 1.6;
+
++  color: var(--color-papyrus);
+
++}
+
++@keyframes modalFadeIn {
+
++  from {
+
++    opacity: 0;
+
++    transform: scale(0.95);
+
++  }
+
++  to {
+
++    opacity: 1;
+
++    transform: scale(1);
+
++  }
+
++}
+
++
+
++/* Hieroglyphics Page Styling */
+
++.container-hieroglyphics {
+
++  max-width: 800px;
+
++  margin: 0 auto;
+
++  padding: 2rem;
+
++  text-align: center;
+
++}
+
++.hieroglyphics-header h1 {
+
++  font-size: 2.5rem;
+
++  color: var(--color-gold);
+
++  margin-bottom: 0.5rem;
+
++}
+
++.hieroglyphics-layout {
+
++  display: flex;
+
++  flex-direction: column;
+
++  gap: 2rem;
+
++  margin-top: 3rem;
+
++  align-items: center;
+
++}
+
++.input-panel {
+
++  padding: 2rem;
+
++  width: 100%;
+
++  max-width: 500px;
+
++}
+
++.name-input {
+
++  width: 100%;
+
++  padding: 1rem;
+
++  background: rgba(0, 0, 0, 0.4);
+
++  border: 1px solid var(--glass-border);
+
++  border-radius: 8px;
+
++  color: var(--color-papyrus);
+
++  font-size: 1.25rem;
+
++  text-align: center;
+
++  outline: none;
+
++  letter-spacing: 2px;
+
++}
+
++.name-input:focus {
+
++  border-color: var(--color-gold);
+
++}
+
++/* Opaque fallback (no backdrop support) */
+
++.cartouche-display {
+
++  padding: 3rem;
+
++  display: inline-block;
+
++  background: rgba(10, 10, 15, 0.97);
+
++  border: 2px solid var(--color-gold);
+
++  box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+
++}
+
++/* Enhanced version when backdrop-filter is supported */
+
++@supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
+
++  .cartouche-display {
+
++    background: radial-gradient(circle, rgba(20, 20, 30, 0.9) 0%, rgba(10, 10, 15, 0.95) 100%);
+
++  }
+
++}
+
++.cartouche-border {
+
++  border: 2px solid var(--color-gold);
+
++  border-radius: 40px;
+
++  padding: 1.5rem 2.5rem;
+
++  background: rgba(0, 0, 0, 0.3);
+
++  min-height: 120px;
+
++  display: flex;
+
++  justify-content: center;
+
++  align-items: center;
+
++}
+
++.cartouche-glyphs {
+
++  display: flex;
+
++  gap: 1.5rem;
+
++  flex-wrap: wrap;
+
++  justify-content: center;
+
++}
+
++@keyframes glyphEnter {
+
++  from {
+
++    opacity: 0;
+
++    transform: translateY(8px) scale(0.8);
+
++  }
+
++  to {
+
++    opacity: 1;
+
++    transform: translateY(0) scale(1);
+
++  }
+
++}
+
++.glyph-item {
+
++  display: flex;
+
++  flex-direction: column;
+
++  align-items: center;
+
++  width: 60px;
+
++  animation: glyphEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
++}
+
++.glyph-svg {
+
++  width: 50px;
+
++  height: 50px;
+
++  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+
++}
+
++.glyph-letter {
+
++  font-size: 0.8rem;
+
++  color: var(--color-sandstone);
+
++  margin-top: 0.5rem;
+
++}
+
++
+
++
+
++/* ===== HOME PAGE ===== */
+
++.home-hero {
+
++  height: 100vh;
+
++  background-size: cover;
+
++  background-position: center;
+
++  display: flex;
+
++  justify-content: center;
+
++  align-items: center;
+
++  text-align: center;
+
++  position: relative;
+
++  margin-top: -70px;
+
++}
+
++.home-content {
+
++  max-width: 800px;
+
++  padding: 2rem;
+
++}
+
++.home-title {
+
++  font-size: 4rem;
+
++  color: var(--color-gold);
+
++  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+
++  margin-bottom: 1.5rem;
+
++}
+
++.home-subtitle {
+
++  font-size: 1.25rem;
+
++  color: var(--color-papyrus);
+
++  margin-bottom: 2.5rem;
+
++  line-height: 1.6;
+
++  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+
++}
+
++.cta-button {
+
++  background: rgba(212, 175, 55, 0.2);
+
++  border: 1px solid var(--color-gold);
+
++  color: var(--color-gold);
+
++  padding: 1rem 2.5rem;
+
++  font-family: var(--font-heading);
+
++  font-size: 1rem;
+
++  cursor: pointer;
+
++  border-radius: 8px;
+
++  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+
++  transition: all 0.3s;
+
++}
+
++.cta-button:hover {
+
++  background: var(--color-gold);
+
++  color: #0b0b0f;
+
++  box-shadow: 0 4px 25px rgba(212, 175, 55, 0.5);
+
++}
+
++.scroll-cue {
+
++  position: absolute;
+
++  bottom: 2rem;
+
++  left: 50%;
+
++  transform: translateX(-50%);
+
++  animation: bounce 2s infinite;
+
++}
+
++.arrow-down {
+
++  font-size: 2rem;
+
++  color: var(--color-gold);
+
++}
+
++@keyframes bounce {
+
++  0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+
++  40% { transform: translateY(-10px) translateX(-50%); }
+
++  60% { transform: translateY(-5px) translateX(-50%); }
+
++}
+
++@media (max-width: 768px) {
+
++  .home-title { font-size: 2.5rem; }
+
++  .home-subtitle { font-size: 1rem; }
+
++}
+
++
+
++/* ===== PYRAMIDS PAGE ===== */
+
++.page-container {
+
++  max-width: 1200px;
+
++  margin: 0 auto;
+
++  padding: 2rem 2rem 5rem 2rem;
+
++}
+
++.section-header {
+
++  text-align: center;
+
++  margin-bottom: 4rem;
+
++}
+
++.section-header h1 {
+
++  font-size: 3rem;
+
++  color: var(--color-gold);
+
++  margin-bottom: 1rem;
+
++}
+
++.pyramids-grid {
+
++  display: grid;
+
++  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
++  gap: 2rem;
+
++}
+
++.pyramid-card {
+
++  padding: 2rem;
+
++  display: flex;
+
++  flex-direction: column;
+
++  height: 100%;
+
++}
+
++.pyramid-card h2 {
+
++  font-size: 1.5rem;
+
++  margin-bottom: 1.5rem;
+
++  color: var(--color-sandstone);
+
++}
+
++.stats-box {
+
++  display: flex;
+
++  justify-content: space-between;
+
++  margin-bottom: 1.5rem;
+
++  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
++  padding-bottom: 1rem;
+
++}
+
++.stat-item {
+
++  display: flex;
+
++  flex-direction: column;
+
++}
+
++.stat-num {
+
++  font-size: 1.8rem;
+
++  font-family: var(--font-heading);
+
++  color: var(--color-gold);
+
++}
+
++.stat-label {
+
++  font-size: 0.8rem;
+
++  color: var(--color-papyrus);
+
++  opacity: 0.7;
+
++  margin-top: 0.2rem;
+
++}
+
++.builder-text {
+
++  margin-bottom: 0.5rem;
+
++  color: var(--color-gold);
+
++}
+
++.desc-text {
+
++  line-height: 1.5;
+
++  font-size: 0.95rem;
+
++}
+
++
+
++/* ===== MONUMENTS PAGE ===== */
+
++.monuments-layout {
+
++  display: flex;
+
++  flex-direction: column;
+
++  gap: 2rem;
+
++}
+
++.monument-strip {
+
++  padding: 2.5rem;
+
++}
+
++.monument-strip h2 {
+
++  font-size: 1.8rem;
+
++  color: var(--color-sandstone);
+
++  margin-bottom: 0.5rem;
+
++}
+
++.strip-meta {
+
++  font-size: 0.9rem;
+
++  color: var(--color-gold);
+
++  margin-bottom: 1rem;
+
++}
+
++.strip-desc {
+
++  font-size: 1rem;
+
++  line-height: 1.6;
+
++}
+
++
+
++/* ===== PHARAOHS PAGE ===== */
+
++.timeline-container {
+
++  display: flex;
+
++  flex-direction: column;
+
++  gap: 3rem;
+
++}
+
++.timeline-era {
+
++  border-left: 2px solid var(--color-gold);
+
++  padding-left: 2rem;
+
++  margin-left: 1rem;
+
++}
+
++.era-title {
+
++  font-size: 1.8rem;
+
++  color: var(--color-gold);
+
++  margin-bottom: 2rem;
+
++}
+
++.era-cards {
+
++  display: flex;
+
++  flex-direction: column;
+
++  gap: 1.5rem;
+
++}
+
++.pharaoh-card {
+
++  padding: 1.5rem 2rem;
+
++}
+
++.pharaoh-card h3 {
+
++  font-size: 1.4rem;
+
++  color: var(--color-sandstone);
+
++  margin-bottom: 0.5rem;
+
++}
+
++.reign-text {
+
++  font-size: 0.9rem;
+
++  color: var(--color-papyrus);
+
++  opacity: 0.8;
+
++  margin-bottom: 0.5rem;
+
++}
+
++.achievement-text {
+
++  line-height: 1.5;
+
++}
+
++
+
++/* ===== GODS PAGE ===== */
+
++.gods-grid {
+
++  display: grid;
+
++  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
++  gap: 2rem;
+
++}
+
++.god-card {
+
++  padding: 2.5rem;
+
++  text-align: center;
+
++  cursor: pointer;
+
++}
+
++.god-card h2 {
+
++  font-size: 2rem;
+
++  color: var(--color-gold);
+
++  margin-bottom: 0.5rem;
+
++}
+
++.god-card h4 {
+
++  font-size: 1rem;
+
++  color: var(--color-papyrus);
+
++  opacity: 0.8;
+
++  margin-bottom: 1.5rem;
+
++  font-family: var(--font-body);
+
++  font-weight: 400;
+
++}
+
++.read-myth-label {
+
++  color: var(--color-gold);
+
++  font-family: var(--font-heading);
+
++  font-size: 0.9rem;
+
++  letter-spacing: 1px;
+
++}
+
++
+
++/* ===== GALLERY PAGE ===== */
+
++.gallery-grid {
+
++  display: grid;
+
++  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
++  gap: 1.5rem;
+
++}
+
++.gallery-item {
+
++  position: relative;
+
++  border-radius: 12px;
+
++  overflow: hidden;
+
++  cursor: pointer;
+
++  height: 250px;
+
++  padding: 0;
+
++}
+
++.gallery-img {
+
++  width: 100%;
+
++  height: 100%;
+
++  object-fit: cover;
+
++  transition: transform 0.5s ease;
+
++}
+
++.gallery-item:hover .gallery-img {
+
++  transform: scale(1.08);
+
++}
+
++.gallery-overlay {
+
++  position: absolute;
+
++  bottom: 0;
+
++  left: 0;
+
++  width: 100%;
+
++  padding: 1.5rem;
+
++  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+
++}
+
++.gallery-overlay h3 {
+
++  font-size: 1.25rem;
+
++  color: var(--color-gold);
+
++}
+
++.lightbox-overlay {
+
++  position: fixed;
+
++  top: 0;
+
++  left: 0;
+
++  width: 100vw;
+
++  height: 100vh;
+
++  background: rgba(0,0,0,0.9);
+
++  z-index: 3000;
+
++  display: flex;
+
++  justify-content: center;
+
++  align-items: center;
+
++}
+
++.lightbox-close {
+
++  position: absolute;
+
++  top: 2rem;
+
++  right: 2rem;
+
++  background: none;
+
++  border: none;
+
++  color: white;
+
++  cursor: pointer;
+
++}
+
++.lightbox-close:focus-visible {
+
++  outline: 2px solid var(--color-gold);
+
++  border-radius: 4px;
+
++}
+
++.lightbox-content {
+
++  max-width: 90%;
+
++  display: flex;
+
++  flex-direction: column;
+
++  align-items: center;
+
++  gap: 1rem;
+
++}
+
++.lightbox-img {
+
++  max-width: 100%;
+
++  max-height: 70vh;
+
++  border-radius: 8px;
+
++  box-shadow: 0 0 30px rgba(212,175,55,0.2);
+
++}
+
++.lightbox-caption {
+
++  padding: 1.5rem 2rem;
+
++  text-align: center;
+
++  max-width: 500px;
+
++}
+
++.lightbox-caption h3 {
+
++  color: var(--color-gold);
+
++  margin-bottom: 0.5rem;
+
++}
+
++
+
++/* ===== PLAN VISIT PAGE ===== */
+
++.visit-grid {
+
++  display: grid;
+
++  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+
++  gap: 2rem;
+
++}
+
++.visit-info-card {
+
++  padding: 2.5rem;
+
++}
+
++.visit-info-card h2 {
+
++  color: var(--color-gold);
+
++  margin-bottom: 1.5rem;
+
++}
+
++.visit-info-card ul {
+
++  list-style: none;
+
++  display: flex;
+
++  flex-direction: column;
+
++  gap: 1rem;
+
++}
+
++.visit-info-card li {
+
++  font-size: 1rem;
+
++  line-height: 1.5;
+
++}
+
++.visit-info-card li strong {
+
++  color: var(--color-sandstone);
+
++}
+
++.visit-map-card {
+
++  padding: 2.5rem;
+
++}
+
++.visit-map-card h2 {
+
++  color: var(--color-gold);
+
++  margin-bottom: 1.5rem;
+
++}
+
++.map-placeholder {
+
++  height: 300px;
+
++  background-size: cover;
+
++  background-position: center;
+
++  border-radius: 8px;
+
++  position: relative;
+
++  border: 1px solid var(--glass-border);
+
++}
+
++.map-pin {
+
++  position: absolute;
+
++  background: rgba(11,11,15,0.85);
+
++  color: var(--color-gold);
+
++  padding: 0.3rem 0.8rem;
+
++  border-radius: 12px;
+
++  border: 1px solid var(--color-gold);
+
++  font-size: 0.8rem;
+
++  font-weight: bold;
+
++}
+
++.map-pin.cairo { top: 20%; left: 35%; }
+
++.map-pin.luxor { top: 60%; left: 45%; }
+
++.map-pin.aswan { top: 80%; left: 48%; }
+
++
+
++/* ===== ABOUT PAGE ===== */
+
++.about-grid {
+
++  display: grid;
+
++  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+
++  gap: 2rem;
+
++}
+
++.about-info {
+
++  padding: 2.5rem;
+
++}
+
++.about-info h2 {
+
++  color: var(--color-gold);
+
++  margin-bottom: 1.5rem;
+
++}
+
++.about-info h3 {
+
++  color: var(--color-sandstone);
+
++  margin: 1.5rem 0 0.75rem;
+
++  font-size: 1.1rem;
+
++}
+
++.about-info p {
+
++  line-height: 1.6;
+
++}
+
++.sources-list {
+
++  padding-left: 1.25rem;
+
++  display: flex;
+
++  flex-direction: column;
+
++  gap: 0.5rem;
+
++}
+
++.contact-form-card {
+
++  padding: 2.5rem;
+
++}
+
++.contact-form-card h2 {
+
++  color: var(--color-gold);
+
++  margin-bottom: 1.5rem;
+
++}
+
++.contact-form {
+
++  display: flex;
+
++  flex-direction: column;
+
++  gap: 1rem;
+
++}
+
++.form-input {
+
++  width: 100%;
+
++  padding: 0.8rem 1rem;
+
++  background: rgba(0, 0, 0, 0.4);
+
++  border: 1px solid var(--glass-border);
+
++  border-radius: 6px;
+
++  color: var(--color-papyrus);
+
++  font-family: var(--font-body);
+
++  font-size: 1rem;
+
++  outline: none;
+
++  resize: vertical;
+
++}
+
++.form-input:focus {
+
++  border-color: var(--color-gold);
+
++}
+
++.success-msg {
+
++  color: var(--color-gold);
+
++  font-weight: bold;
+
++  padding: 1rem;
+
++  border: 1px solid var(--glass-border);
+
++  border-radius: 6px;
+
++  background: rgba(212, 175, 55, 0.05);
+
++}
+
++
+
++/* Page transitions */
+
++.app-shell {
+
++  min-height: 100vh;
+
++  display: flex;
+
++  flex-direction: column;
+
++}
+
++
+
++.page-transition {
+
++  flex: 1;
+
++  animation-duration: 0.4s;
+
++  animation-fill-mode: both;
+
++  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+
++}
+
++
+
++.page-transition-forward {
+
++  animation-name: slideInRight;
+
++}
+
++
+
++.page-transition-backward {
+
++  animation-name: slideInLeft;
+
++}
+
++
+
++@keyframes slideInRight {
+
++  from {
+
++    opacity: 0;
+
++    transform: translateX(40px);
+
++  }
+
++  to {
+
++    opacity: 1;
+
++    transform: translateX(0);
+
++  }
+
++}
+
++
+
++@keyframes slideInLeft {
+
++  from {
+
++    opacity: 0;
+
++    transform: translateX(-40px);
+
++  }
+
++  to {
+
++    opacity: 1;
+
++    transform: translateX(0);
+
++  }
+
++}
+
++
+
+```
+
+### index.html
+```diff
+--- a/index.html
++++ b/index.html
+@@ -4,10 +4,11 @@
+     <meta charset="UTF-8" />
+
+     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
++    <meta name="description" content="Explore 5,000 years of ancient Egyptian history — pyramids, pharaohs, gods, and hieroglyphics — through a stunning liquid-glass interface." />
+
++    <title>Eternal Egypt — Journey Through Ancient History</title>
+
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+-    <title>Eternal Egypt</title>
+
+   </head>
+
+   <body>
+
+     <div id="root"></div>
+
+```
+

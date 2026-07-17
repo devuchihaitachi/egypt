@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import ScrollReveal from '../components/ScrollReveal';
 import { useLanguage } from '../context/LanguageContext';
 

@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { expect, test } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { NavigationProvider, useNavigation } from './Router';
+import { LanguageProvider } from '../context/LanguageContext';
 
 function TestComponent() {
   const { currentPage, navigateTo, transitionDirection } = useNavigation();
@@ -17,10 +18,12 @@ function TestComponent() {
 
 test('handles page transitions and directions correctly', () => {
   render(
-    <MemoryRouter initialEntries={['/']}>
-      <NavigationProvider>
-        <TestComponent />
-      </NavigationProvider>
+    <MemoryRouter initialEntries={['/en']}>
+      <LanguageProvider>
+        <NavigationProvider>
+          <TestComponent />
+        </NavigationProvider>
+      </LanguageProvider>
     </MemoryRouter>
   );
 
